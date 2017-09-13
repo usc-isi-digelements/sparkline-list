@@ -1,0 +1,29 @@
+{
+  "name": "sparkline-list",
+  "description": "A Polymer Element showing list of sparkline charts.",
+  "version": "2.0.0",
+  "authors": [
+    "Next Century Corporation"
+  ],
+  "license": "Apache-2.0",
+  "keywords": [
+    "web-component",
+    "polymer",
+    "d3"
+  ],
+  "main": "sparkline-list.html",
+  "homepage": "https://github.com/DigElements/sparkline-list/",
+  "ignore": [
+    "/.*",
+    "/test/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^2.0.2",
+    "sparkline-chart" : "DigElements/sparkline-chart#^2.0.0",
+    "json-combine" : "DigElements/json-combine#^2.1.1"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^2.0.0",
+    "web-component-tester": "^6.0.0"
+  }
+}
