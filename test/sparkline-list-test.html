@@ -1,0 +1,90 @@
+<!--
+Copyright 2017 Next Century Corporation
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <link rel="import" href="../sparkline-list.html">
+</head>
+
+<body>
+  <test-fixture id="sparkline-list-fixture">
+    <template>
+      <sparkline-list>
+      </sparkline-list>
+    </template>
+  </test-fixture>
+
+  <script>
+  suite('sparkline-list tests', function() {
+    var element;
+
+    setup(function(done) {
+      element = fixture('sparkline-list-fixture');
+      flush(done);
+    });
+
+    test('properties are initialized correctly', function() {
+      assert.isUndefined(element.convertFunction);
+      assert.isUndefined(element.results);
+      assert.equal(element.xProp, "date");
+      assert.equal(element.yProp, "count");
+      assert.equal(element.chartWidths, 500);
+      assert.equal(element.chartHeights, 25);
+      assert.isUndefined(element._sparkArrays);
+    });
+
+    test('Calls convertFunction correctly and generates correct _sparkArrays', function(done) {
+      var convertFunc = function (inputArray) {
+        return inputArray.map( function(inputItem, index) {
+          return {
+            "key" : "key "+index,
+            "pointArray": inputItem.map(function(item) { return {"date": item.x, "count": item.y*2}; })
+          };
+        });
+      };
+
+      var input = [
+        [{"x": 2, "y":3}, {"x": 0, "y":5}],
+        [{"x": 4, "y":24}],
+        [{"x": 1, "y":15}, {"x": 5, "y":8}, {"x": 3, "y":2}]
+      ];
+
+      var expectedOutput = [
+        [{"date": 2, "count":6}, {"date": 0, "count":10}],
+        [{"date": 4, "count":48}],
+        [{"date": 1, "count":30}, {"date": 5, "count":16}, {"date": 3, "count":4}]
+      ];
+
+      element.results = input;
+      element.convertFunction = convertFunc;
+      flush(function() {
+        var res = element._sparkArrays;
+        assert.deep.equal(res, expectedOutput);
+
+        var charts = Polymer.dom(element.root).querySelectorAll('spark-chart');
+        assert.equal(charts.length, 3);
+
+        done();
+      });
+    });
+  });
+  </script>
+</body>
+</html>
