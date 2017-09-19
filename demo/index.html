@@ -1,12 +1,9 @@
 <!--
 Copyright 2017 Next Century Corporation
-
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
-
     http://www.apache.org/licenses/LICENSE-2.0
-
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,11 +28,9 @@ limitations under the License.
           var yProp = "testCount"
           demo.xProp = xProp;
           demo.yProp = yProp;
-
           demo.convertHistograms = function(points) {
             var pointGroupObj = {};
             var pointGroupArray = [];
-
             points.map(function(point) {
               if(!pointGroupObj[point.group]) {
                 pointGroupObj[point.group] = [];
@@ -45,7 +40,6 @@ limitations under the License.
               newPt[yProp] = point.value;
               pointGroupObj[point.group].push(newPt);
             });
-
             for (key in pointGroupObj) {
               pointGroupArray.push({
                 "pointArray": pointGroupObj[key],
@@ -54,7 +48,6 @@ limitations under the License.
             }
             return pointGroupArray;
           };
-
           demo.testPoints = [
             {"createdDate": new Date(2017, 01, 02) , "value": 0, "group": "chart 1"},
             {"createdDate": new Date(2017, 01, 09) , "value": 3, "group": "chart 1"},
@@ -82,9 +75,20 @@ limitations under the License.
             {"createdDate": new Date(2017, 02, 06) , "value": 7, "group": "chart 3"},
             {"createdDate": new Date(2017, 02, 13) , "value": 1, "group": "chart 3"},
             {"createdDate": new Date(2017, 02, 20) , "value": 9, "group": "chart 3"},
-            {"createdDate": new Date(2017, 02, 27) , "value": 2, "group": "chart 3"}
+            {"createdDate": new Date(2017, 02, 27) , "value": 2, "group": "chart 3"},
+            {"createdDate": new Date(2017, 02, 13) , "value": 1, "group": "chart 4"},
+            {"createdDate": new Date(2017, 02, 20) , "value": 9, "group": "chart 4"},
+            {"createdDate": new Date(2017, 02, 27) , "value": 2, "group": "chart 4"},
+            {"createdDate": new Date(2017, 02, 13) , "value": 5, "group": "chart 5"},
+            {"createdDate": new Date(2017, 02, 20) , "value": 2, "group": "chart 5"},
+            {"createdDate": new Date(2017, 02, 27) , "value": 2, "group": "chart 5"},
+            {"createdDate": new Date(2017, 02, 13) , "value": 4, "group": "chart 6"},
+            {"createdDate": new Date(2017, 02, 20) , "value": 6, "group": "chart 6"},
+            {"createdDate": new Date(2017, 02, 27) , "value": 2, "group": "chart 6"},
+            {"createdDate": new Date(2017, 02, 13) , "value": 3, "group": "chart 7"},
+            {"createdDate": new Date(2017, 02, 20) , "value": 1, "group": "chart 7"},
+            {"createdDate": new Date(2017, 02, 27) , "value": 9, "group": "chart 7"}
           ];
-
           demo.stringify = function(data) {
             return JSON.stringify(data);
           };
@@ -110,7 +114,10 @@ limitations under the License.
             results="[[testPoints]]"
             convert-function="[[convertHistograms]]"
             x-prop="[[xProp]]"
-            y-prop="[[yProp]]">
+            y-prop="[[yProp]]"
+            chart-widths="500px"
+            chart-heights="30px"
+            max-overall-height="150px">
           </sparkline-list>
         </div>
       </template>

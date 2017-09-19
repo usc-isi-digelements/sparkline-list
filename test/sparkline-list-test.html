@@ -1,12 +1,9 @@
 <!--
 Copyright 2017 Next Century Corporation
-
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
-
     http://www.apache.org/licenses/LICENSE-2.0
-
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,22 +31,22 @@ limitations under the License.
   <script>
   suite('sparkline-list tests', function() {
     var element;
-
     setup(function(done) {
       element = fixture('sparkline-list-fixture');
       flush(done);
     });
-
     test('properties are initialized correctly', function() {
       assert.isUndefined(element.convertFunction);
       assert.isUndefined(element.results);
       assert.equal(element.xProp, "date");
       assert.equal(element.yProp, "count");
-      assert.equal(element.chartWidths, 500);
-      assert.equal(element.chartHeights, 25);
+      assert.equal(element.chartWidths, "500px");
+      assert.equal(element.chartHeights, "25px");
+      assert.equal(element._chartWidthsNumber, 500);
+      assert.equal(element._chartHeightsNumber, 25);
+      assert.isUndefined(element.maxOverallHeight);
       assert.isUndefined(element._sparkArrays);
     });
-
     test('Calls convertFunction correctly and generates correct _sparkArrays', function(done) {
       var convertFunc = function (inputArray) {
         return inputArray.map( function(inputItem, index) {
@@ -59,28 +56,30 @@ limitations under the License.
           };
         });
       };
-
       var input = [
         [{"x": 2, "y":3}, {"x": 0, "y":5}],
         [{"x": 4, "y":24}],
         [{"x": 1, "y":15}, {"x": 5, "y":8}, {"x": 3, "y":2}]
       ];
-
       var expectedOutput = [
-        [{"date": 2, "count":6}, {"date": 0, "count":10}],
-        [{"date": 4, "count":48}],
-        [{"date": 1, "count":30}, {"date": 5, "count":16}, {"date": 3, "count":4}]
+        {
+          key: "key 0",
+          pointArray: [{"date": 2, "count":6}, {"date": 0, "count":10}]
+        },{
+          key: "key 1",
+          pointArray: [{"date": 4, "count":48}]
+        },{
+          key: "key 2",
+          pointArray: [{"date": 1, "count":30}, {"date": 5, "count":16}, {"date": 3, "count":4}]
+        }
       ];
-
       element.results = input;
       element.convertFunction = convertFunc;
       flush(function() {
         var res = element._sparkArrays;
-        assert.deep.equal(res, expectedOutput);
-
-        var charts = Polymer.dom(element.root).querySelectorAll('spark-chart');
+        assert.deepEqual(res, expectedOutput);
+        var charts = Polymer.dom(element.root).querySelectorAll('sparkline-chart');
         assert.equal(charts.length, 3);
-
         done();
       });
     });

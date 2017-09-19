@@ -3,6 +3,9 @@ A Polymer Element showing list of sparkline charts.
 
 ### Example
 ```js
+var xProp = date;
+var yProp = count;
+
 var results = [
   {"createdDate": new Date(2017, 01, 02) , "value": 0, "group": "chart 1"},
   {"createdDate": new Date(2017, 01, 09) , "value": 3, "group": "chart 1"},
@@ -30,7 +33,19 @@ var results = [
   {"createdDate": new Date(2017, 02, 06) , "value": 7, "group": "chart 3"},
   {"createdDate": new Date(2017, 02, 13) , "value": 1, "group": "chart 3"},
   {"createdDate": new Date(2017, 02, 20) , "value": 9, "group": "chart 3"},
-  {"createdDate": new Date(2017, 02, 27) , "value": 2, "group": "chart 3"}
+  {"createdDate": new Date(2017, 02, 27) , "value": 2, "group": "chart 3"},
+  {"createdDate": new Date(2017, 02, 13) , "value": 1, "group": "chart 4"},
+  {"createdDate": new Date(2017, 02, 20) , "value": 9, "group": "chart 4"},
+  {"createdDate": new Date(2017, 02, 27) , "value": 2, "group": "chart 4"},
+  {"createdDate": new Date(2017, 02, 13) , "value": 5, "group": "chart 5"},
+  {"createdDate": new Date(2017, 02, 20) , "value": 2, "group": "chart 5"},
+  {"createdDate": new Date(2017, 02, 27) , "value": 2, "group": "chart 5"},
+  {"createdDate": new Date(2017, 02, 13) , "value": 4, "group": "chart 6"},
+  {"createdDate": new Date(2017, 02, 20) , "value": 6, "group": "chart 6"},
+  {"createdDate": new Date(2017, 02, 27) , "value": 2, "group": "chart 6"},
+  {"createdDate": new Date(2017, 02, 13) , "value": 3, "group": "chart 7"},
+  {"createdDate": new Date(2017, 02, 20) , "value": 1, "group": "chart 7"},
+  {"createdDate": new Date(2017, 02, 27) , "value": 9, "group": "chart 7"}
 ];
 
 convertHistograms = function(points) {
@@ -62,7 +77,10 @@ convertHistograms = function(points) {
   results="[[testPoints]]"
   convert-function="[[convertHistograms]]"
   x-prop="[[xProp]]"
-  y-prop="[[yProp]]">
+  y-prop="[[yProp]]"
+  chart-widths="500px"
+  chart-heights="30px"
+  max-overall-height="150px">
 </sparkline-list>
 ```
 

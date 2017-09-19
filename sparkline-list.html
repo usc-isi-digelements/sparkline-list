@@ -1,12 +1,10 @@
+
 <!--
 Copyright 2017 Next Century Corporation
-
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
-
     http://www.apache.org/licenses/LICENSE-2.0
-
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,9 +17,10 @@ limitations under the License.
 
 <!--
 A Polymer Element that displays a list of spark line charts.
-
 ### Example
 ```js
+var xProp = date;
+var yProp = count;
 var results = [
   {"createdDate": new Date(2017, 01, 02) , "value": 0, "group": "chart 1"},
   {"createdDate": new Date(2017, 01, 09) , "value": 3, "group": "chart 1"},
@@ -49,13 +48,23 @@ var results = [
   {"createdDate": new Date(2017, 02, 06) , "value": 7, "group": "chart 3"},
   {"createdDate": new Date(2017, 02, 13) , "value": 1, "group": "chart 3"},
   {"createdDate": new Date(2017, 02, 20) , "value": 9, "group": "chart 3"},
-  {"createdDate": new Date(2017, 02, 27) , "value": 2, "group": "chart 3"}
+  {"createdDate": new Date(2017, 02, 27) , "value": 2, "group": "chart 3"},
+  {"createdDate": new Date(2017, 02, 13) , "value": 1, "group": "chart 4"},
+  {"createdDate": new Date(2017, 02, 20) , "value": 9, "group": "chart 4"},
+  {"createdDate": new Date(2017, 02, 27) , "value": 2, "group": "chart 4"},
+  {"createdDate": new Date(2017, 02, 13) , "value": 5, "group": "chart 5"},
+  {"createdDate": new Date(2017, 02, 20) , "value": 2, "group": "chart 5"},
+  {"createdDate": new Date(2017, 02, 27) , "value": 2, "group": "chart 5"},
+  {"createdDate": new Date(2017, 02, 13) , "value": 4, "group": "chart 6"},
+  {"createdDate": new Date(2017, 02, 20) , "value": 6, "group": "chart 6"},
+  {"createdDate": new Date(2017, 02, 27) , "value": 2, "group": "chart 6"},
+  {"createdDate": new Date(2017, 02, 13) , "value": 3, "group": "chart 7"},
+  {"createdDate": new Date(2017, 02, 20) , "value": 1, "group": "chart 7"},
+  {"createdDate": new Date(2017, 02, 27) , "value": 9, "group": "chart 7"}
 ];
-
 convertHistograms = function(points) {
   var pointGroupObj = {};
   var pointGroupArray = [];
-
   points.map(function(point) {
     if(!pointGroupObj[point.group]) {
       pointGroupObj[point.group] = [];
@@ -65,7 +74,6 @@ convertHistograms = function(points) {
     newPt[yProp] = point.value;
     pointGroupObj[point.group].push(newPt);
   });
-
   for (key in pointGroupObj) {
     pointGroupArray.push({
       "pointArray": pointGroupObj[key],
@@ -75,16 +83,17 @@ convertHistograms = function(points) {
   return pointGroupArray;
 };
 ```
-
 ```html
 <sparkline-list
   results="[[testPoints]]"
   convert-function="[[convertHistograms]]"
   x-prop="[[xProp]]"
-  y-prop="[[yProp]]">
+  y-prop="[[yProp]]"
+  chart-widths="500px"
+  chart-heights="30px"
+  max-overall-height="150px">
 </sparkline-list>
 ```
-
 @demo demo/index.html
 -->
 
@@ -95,6 +104,10 @@ convertHistograms = function(points) {
       text-align: left;
       text-transform: capitalize;
     }
+    div {
+      max-height: [[maxOverallHeight]];
+      overflow: auto;
+    }
     </style>
     <json-combine
       data-in1="[[results]]"
@@ -102,31 +115,43 @@ convertHistograms = function(points) {
       data-out="{{_sparkArrays}}"
       combine-function="[[convertFunction]]">
     </json-combine>
-    <table>
-      <template is='dom-repeat' items='[[_sparkArrays]]' as='sparkPoints'>
-        <tr>
-          <th>[[sparkPoints.key]]</th>
-          <td>
-            <sparkline-chart
-              points="[[sparkPoints.pointArray]]"
-              x-prop="[[xProp]]"
-              y-prop="[[yProp]]"
-              width="[[chartWidths]]"
-              height="[[chartHeights]]">
-            </sparkline-chart>
-          </td>
-        </tr>
-      </template>
-    </table>
+    <div>
+      <table>
+        <template is='dom-repeat' items='[[_sparkArrays]]' as='sparkPoints'>
+          <tr>
+            <th>[[sparkPoints.key]]</th>
+            <td>
+              <sparkline-chart
+                points="[[sparkPoints.pointArray]]"
+                x-prop="[[xProp]]"
+                y-prop="[[yProp]]"
+                width="[[_chartWidthsNumber]]"
+                height="[[_chartHeightsNumber]]">
+              </sparkline-chart>
+            </td>
+          </tr>
+        </template>
+      </table>
+    </div>
   </template>
 
   <script>
     Polymer({
       is: 'sparkline-list',
-
       properties: {
+        chartWidths: {
+          type: String,
+          value: '500px'
+        },
+        chartHeights: {
+          type: String,
+          value: '25px'
+        },
         convertFunction: {
           type: Object
+        },
+        maxOverallHeight: {
+          type: String
         },
         results: {
           type: Array
@@ -139,17 +164,22 @@ convertHistograms = function(points) {
           type: String,
           value: 'count'
         },
-        chartWidths: {
+        _chartHeightsNumber: { 
           type: Number,
-          value: 500
+          computed: 'getNumber(chartHeights)'
         },
-        chartHeights: {
+        _chartWidthsNumber: { 
           type: Number,
-          value: 25
+          computed: 'getNumber(chartWidths)'
         },
         _sparkArrays: {
           type: Array
         }
+      },
+      getNumber: function(measurement) {
+        var index = measurement.match(/[a-z]/i).index;
+        var out = measurement.substring(0, index);
+        return out;
       }
     });
   </script>
