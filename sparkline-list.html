@@ -12,11 +12,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-<link rel="import" href="../sparkline-chart/sparkline-chart.html">
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
 <link rel="import" href="../json-combine/json-combine.html">
+<link rel="import" href="../sparkline-chart/sparkline-chart.html">
 
 <!--
 A Polymer Element that displays a list of spark line charts.
+
 ### Example
 ```js
 var xProp = date;
@@ -62,6 +67,7 @@ var results = [
   {"createdDate": new Date(2017, 02, 20) , "value": 1, "group": "chart 7"},
   {"createdDate": new Date(2017, 02, 27) , "value": 9, "group": "chart 7"}
 ];
+
 convertHistograms = function(points) {
   var pointGroupObj = {};
   var pointGroupArray = [];
@@ -83,56 +89,189 @@ convertHistograms = function(points) {
   return pointGroupArray;
 };
 ```
+
 ```html
 <sparkline-list
   results="[[testPoints]]"
-  convert-function="[[convertHistograms]]"
   x-prop="[[xProp]]"
   y-prop="[[yProp]]"
-  chart-widths="500px"
-  chart-heights="30px"
-  max-overall-height="150px">
+  convert-function="[[convertHistograms]]">
 </sparkline-list>
 ```
+
+### Styling
+
+`<sparkline-list>` provides the following custom properties and mixins for styling:
+
+Custom property               | Description                            | Default
+------------------------------|----------------------------------------|--------
+`--sparkline-list-max-height` | The max height for the sparkline list. | 300px
+
 @demo demo/index.html
 -->
 
 <dom-module id="sparkline-list">
   <template>
+    <style include="iron-flex iron-flex-alignment"></style>
+
     <style>
-    th {
-      text-align: left;
-      text-transform: capitalize;
-    }
-    div {
-      max-height: [[maxOverallHeight]];
-      overflow: auto;
-    }
+      :host {
+        display: block;
+        max-height: var(--sparkline-list-max-height, 300px);
+        overflow: auto;
+      }
+
+      .sparkline-wrapper {
+        height: 20px;
+        margin-bottom: 5px;
+      }
+
+      iron-icon {
+        --iron-icon-height: 20px;
+        --iron-icon-width: 20px;
+        margin-right: 5px;
+        min-width: 20px;
+      }
+
+      .name {
+        color: var(--primary-text-color);
+        font-size: 14px;
+        font-weight: 500;
+        min-width: 150px;
+        max-width: 150px;
+        margin-right: 5px;
+
+        display: -webkit-box;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: normal;
+        word-break: break-word;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+      }
+
+      a:hover {
+        color: var(--secondary-text-color);
+      }
+
+      sparkline-chart {
+        margin-right: 5px;
+      }
+
+      iron-icon.amber {
+        color: var(--paper-amber-600);
+      }
+
+      iron-icon.black {
+        color: #111;
+      }
+
+      iron-icon.blue {
+        color: var(--paper-blue-600);
+      }
+
+      iron-icon.blue-grey {
+        color: var(--paper-blue-grey-600);
+      }
+
+      iron-icon.brown {
+        color: var(--paper-brown-600);
+      }
+
+      iron-icon.cyan {
+        color: var(--paper-cyan-600);
+      }
+
+      iron-icon.deep-orange {
+        color: var(--paper-deep-orange-600);
+      }
+
+      iron-icon.deep-purple {
+        color: var(--paper-deep-purple-600);
+      }
+
+      iron-icon.green {
+        color: var(--paper-green-600);
+      }
+
+      iron-icon.grey {
+        color: var(--paper-grey-600);
+      }
+
+      iron-icon.indigo {
+        color: var(--paper-indigo-600);
+      }
+
+      iron-icon.light-blue {
+        color: var(--paper-light-blue-600);
+      }
+
+      iron-icon.light-green {
+        color: var(--paper-light-green-600);
+      }
+
+      iron-icon.lime {
+        color: var(--paper-lime-600);
+      }
+
+      iron-icon.orange {
+        color: var(--paper-orange-600);
+      }
+
+      iron-icon.pink {
+        color: var(--paper-pink-600);
+      }
+
+      iron-icon.purple {
+        color: var(--paper-purple-600);
+      }
+
+      iron-icon.red {
+        color: var(--paper-red-600);
+      }
+
+      iron-icon.teal {
+        color: var(--paper-teal-600);
+      }
+
+      iron-icon.white {
+        color: #fff;
+      }
+
+      iron-icon.yellow {
+        color: var(--paper-yellow-600);
+      }
     </style>
+
     <json-combine
       data-in1="[[results]]"
       data-in2="{}"
       data-out="{{_sparkArrays}}"
       combine-function="[[convertFunction]]">
     </json-combine>
-    <div>
-      <table>
-        <template is='dom-repeat' items='[[_sparkArrays]]' as='sparkPoints'>
-          <tr>
-            <th>[[sparkPoints.key]]</th>
-            <td>
-              <sparkline-chart
-                points="[[sparkPoints.pointArray]]"
-                x-prop="[[xProp]]"
-                y-prop="[[yProp]]"
-                width="[[_chartWidthsNumber]]"
-                height="[[_chartHeightsNumber]]">
-              </sparkline-chart>
-            </td>
-          </tr>
+
+    <template is="dom-repeat" items="[[_sparkArrays]]" as="sparkPoints">
+      <div class="layout horizontal center sparkline-wrapper">
+        <template is="dom-if" if="[[icon]]">
+          <iron-icon class$="[[styleClass]]" icon="[[icon]]"></iron-icon>
         </template>
-      </table>
-    </div>
+
+        <template is="dom-if" if="[[sparkPoints.link]]">
+          <a class="name" href$="[[sparkPoints.link]]" title$="Open [[sparkPoints.key]]">[[sparkPoints.key]]</a>
+        </template>
+
+        <template is="dom-if" if="[[!sparkPoints.link]]">
+          <div class="name" title$="[[sparkPoints.key]]">[[sparkPoints.key]]</div>
+        </template>
+
+        <sparkline-chart class="layout horizontal flex"
+          points="[[sparkPoints.pointArray]]"
+          x-prop="[[xProp]]"
+          y-prop="[[yProp]]"
+          style-class="[[styleClass]]">
+        </sparkline-chart>
+      </div>
+    </template>
   </template>
 
   <script>
@@ -140,35 +279,14 @@ convertHistograms = function(points) {
       is: 'sparkline-list',
       properties: {
         /**
-         * The width to draw each graph.
-         *
-         * @type {String}
-         * @default '500px'
-         */
-        chartWidths: {
-          type: String,
-          value: '500px'
-        },
-
-        /**
-         * The height to draw each graph.
-         *
-         * @type {String}
-         * @default '25px'
-         */
-        chartHeights: {
-          type: String,
-          value: '25px'
-        },
-
-        /**
          * (Required)
          *
          * The function used to convert each data array to a drawable set of points.
          * Output must be an array of objects.
          * Objects must have a 'key' {String} that will be used for the title of the chart.
          * Objects must have a 'pointArray' {Array} that is an array of objects that all have x and y properties matching 'xProp' and 'yProp'.
-
+         * Optionally, objects may have a 'link' {String}.
+         *
          * @type {Object}
          */
         convertFunction: {
@@ -176,15 +294,14 @@ convertHistograms = function(points) {
         },
 
         /**
-         * (Optional)
+         * The icon for the graphs (if any).
          *
-         * The maximum height to draw to list of graphs.
-         * If the combined hight of the graphs is larger than this value there will be a scroll bar.
-         * If this value is not set there will be no maximum height and it will wrap around all drawn charts.
          * @type {String}
+         * @default ''
          */
-        maxOverallHeight: {
-          type: String
+        icon: {
+          type: String,
+          value: ''
         },
 
         /**
@@ -196,6 +313,17 @@ convertHistograms = function(points) {
          */
         results: {
           type: Array
+        },
+
+        /**
+         * The style class for the graphs.
+         *
+         * @type {String}
+         * @default ''
+         */
+        styleClass: {
+          type: String,
+          value: ''
         },
 
         /**
@@ -223,30 +351,6 @@ convertHistograms = function(points) {
         /**
          * @private
          *
-         * The numeric height of the charts. Generated by stripping any text from end of chartHeights.
-         *
-         * @type {Number}
-         */
-        _chartHeightsNumber: { 
-          type: Number,
-          computed: '_getNumber(chartHeights)'
-        },
-
-        /**
-         * @private
-         *
-         * The numeric width of the charts. Generated by stripping any text from end of chartWidths.
-         *
-         * @type {Number}
-         */
-        _chartWidthsNumber: { 
-          type: Number,
-          computed: '_getNumber(chartWidths)'
-        },
-
-        /**
-         * @private
-         *
          * The array of objects holding information for each sparkline-chart to draw.
          * Generated by passing results into convertFunction.
          *
@@ -255,21 +359,6 @@ convertHistograms = function(points) {
         _sparkArrays: {
           type: Array
         }
-      },
-
-      /**
-       * @private
-       *
-       * Strips alphabetic characters from the end of a measurment.
-       * Eg. turns '50px' or '50em' to '50'.
-       *
-       * @param {String} measurment
-       * @return {String}
-       */
-      _getNumber: function(measurement) {
-        var index = measurement.match(/[a-z]/i).index;
-        var out = measurement.substring(0, index);
-        return out;
       }
     });
   </script>

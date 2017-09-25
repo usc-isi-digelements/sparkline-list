@@ -38,13 +38,10 @@ limitations under the License.
     test('properties are initialized correctly', function() {
       assert.isUndefined(element.convertFunction);
       assert.isUndefined(element.results);
-      assert.equal(element.xProp, "date");
-      assert.equal(element.yProp, "count");
-      assert.equal(element.chartWidths, "500px");
-      assert.equal(element.chartHeights, "25px");
-      assert.equal(element._chartWidthsNumber, 500);
-      assert.equal(element._chartHeightsNumber, 25);
-      assert.isUndefined(element.maxOverallHeight);
+      assert.equal(element.icon, '');
+      assert.equal(element.styleClass, '');
+      assert.equal(element.xProp, 'date');
+      assert.equal(element.yProp, 'count');
       assert.isUndefined(element._sparkArrays);
     });
     test('Calls convertFunction correctly and generates correct _sparkArrays', function(done) {

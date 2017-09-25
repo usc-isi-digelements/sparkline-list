@@ -84,6 +84,14 @@ convertHistograms = function(points) {
 </sparkline-list>
 ```
 
+### Styling
+
+`<sparkline-list>` provides the following custom properties and mixins for styling:
+
+Custom property               | Description                            | Default
+------------------------------|----------------------------------------|--------
+`--sparkline-list-max-height` | The max height for the sparkline list. | 300px
+
 ### Dependencies
 
 Dependencies are installed using [Bower](http://bower.io/):
