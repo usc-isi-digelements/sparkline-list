@@ -250,7 +250,7 @@ Custom property               | Description                            | Default
       combine-function="[[convertFunction]]">
     </json-combine>
 
-    <template is="dom-repeat" items="[[_sparkArrays]]" as="sparkPoints">
+    <template is="dom-repeat" items="[[_sparkArrays]]" as="sparkPoints" initial-count="10">
       <div class="layout horizontal center sparkline-wrapper">
         <template is="dom-if" if="[[icon]]">
           <iron-icon class$="[[styleClass]]" icon="[[icon]]"></iron-icon>
