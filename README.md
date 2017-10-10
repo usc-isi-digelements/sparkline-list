@@ -3,85 +3,155 @@ A Polymer Element showing list of sparkline charts.
 
 ### Example
 ```js
-var xProp = date;
-var yProp = count;
-
-var results = [
-  {"createdDate": new Date(2017, 01, 02) , "value": 0, "group": "chart 1"},
-  {"createdDate": new Date(2017, 01, 09) , "value": 3, "group": "chart 1"},
-  {"createdDate": new Date(2017, 01, 16) , "value": 5, "group": "chart 1"},
-  {"createdDate": new Date(2017, 01, 23) , "value": 3, "group": "chart 1"},
-  {"createdDate": new Date(2017, 01, 30) , "value": 9, "group": "chart 1"},
-  {"createdDate": new Date(2017, 02, 06) , "value": 1, "group": "chart 1"},
-  {"createdDate": new Date(2017, 02, 13) , "value": 9, "group": "chart 1"},
-  {"createdDate": new Date(2017, 02, 20) , "value": 7, "group": "chart 1"},
-  {"createdDate": new Date(2017, 02, 27) , "value": 1, "group": "chart 1"},
-  {"createdDate": new Date(2017, 01, 02) , "value": 0, "group": "chart 2"},
-  {"createdDate": new Date(2017, 01, 09) , "value": 6, "group": "chart 2"},
-  {"createdDate": new Date(2017, 01, 16) , "value": 2, "group": "chart 2"},
-  {"createdDate": new Date(2017, 01, 23) , "value": 1, "group": "chart 2"},
-  {"createdDate": new Date(2017, 01, 30) , "value": 5, "group": "chart 2"},
-  {"createdDate": new Date(2017, 02, 06) , "value": 7, "group": "chart 2"},
-  {"createdDate": new Date(2017, 02, 13) , "value": 2, "group": "chart 2"},
-  {"createdDate": new Date(2017, 02, 20) , "value": 8, "group": "chart 2"},
-  {"createdDate": new Date(2017, 02, 27) , "value": 3, "group": "chart 2"},
-  {"createdDate": new Date(2017, 01, 02) , "value": 1, "group": "chart 3"},
-  {"createdDate": new Date(2017, 01, 09) , "value": 4, "group": "chart 3"},
-  {"createdDate": new Date(2017, 01, 16) , "value": 7, "group": "chart 3"},
-  {"createdDate": new Date(2017, 01, 23) , "value": 7, "group": "chart 3"},
-  {"createdDate": new Date(2017, 01, 30) , "value": 1, "group": "chart 3"},
-  {"createdDate": new Date(2017, 02, 06) , "value": 7, "group": "chart 3"},
-  {"createdDate": new Date(2017, 02, 13) , "value": 1, "group": "chart 3"},
-  {"createdDate": new Date(2017, 02, 20) , "value": 9, "group": "chart 3"},
-  {"createdDate": new Date(2017, 02, 27) , "value": 2, "group": "chart 3"},
-  {"createdDate": new Date(2017, 02, 13) , "value": 1, "group": "chart 4"},
-  {"createdDate": new Date(2017, 02, 20) , "value": 9, "group": "chart 4"},
-  {"createdDate": new Date(2017, 02, 27) , "value": 2, "group": "chart 4"},
-  {"createdDate": new Date(2017, 02, 13) , "value": 5, "group": "chart 5"},
-  {"createdDate": new Date(2017, 02, 20) , "value": 2, "group": "chart 5"},
-  {"createdDate": new Date(2017, 02, 27) , "value": 2, "group": "chart 5"},
-  {"createdDate": new Date(2017, 02, 13) , "value": 4, "group": "chart 6"},
-  {"createdDate": new Date(2017, 02, 20) , "value": 6, "group": "chart 6"},
-  {"createdDate": new Date(2017, 02, 27) , "value": 2, "group": "chart 6"},
-  {"createdDate": new Date(2017, 02, 13) , "value": 3, "group": "chart 7"},
-  {"createdDate": new Date(2017, 02, 20) , "value": 1, "group": "chart 7"},
-  {"createdDate": new Date(2017, 02, 27) , "value": 9, "group": "chart 7"}
-];
-
-convertHistograms = function(points) {
-  var pointGroupObj = {};
-  var pointGroupArray = [];
-
-  points.map(function(point) {
-    if(!pointGroupObj[point.group]) {
-      pointGroupObj[point.group] = [];
-    }
-    var newPt = {};
-    newPt[xProp] = point.createdDate;
-    newPt[yProp] = point.value;
-    pointGroupObj[point.group].push(newPt);
-  });
-
-  for (key in pointGroupObj) {
-    pointGroupArray.push({
-      "pointArray": pointGroupObj[key],
-      "key": key
-    });
-  }
-  return pointGroupArray;
-};
+demo.data = [{
+  name: 'Chart 1',
+  points: [{
+    date: new Date(2017, 01, 02),
+    count: 0
+  }, {
+    date: new Date(2017, 01, 09),
+    count: 3
+  }, {
+    date: new Date(2017, 01, 16),
+    count: 5
+  }, {
+    date: new Date(2017, 01, 23),
+    count: 3
+  }, {
+    date: new Date(2017, 01, 30),
+    count: 9
+  }, {
+    date: new Date(2017, 02, 06),
+    count: 1
+  }, {
+    date: new Date(2017, 02, 13),
+    count: 9
+  }, {
+    date: new Date(2017, 02, 20),
+    count: 7
+  }, {
+    date: new Date(2017, 02, 27),
+    count: 1
+  }]
+}, {
+  name: 'Chart 2',
+  points: [{
+    date: new Date(2017, 01, 02),
+    count: 0
+  }, {
+    date: new Date(2017, 01, 09),
+    count: 6
+  }, {
+    date: new Date(2017, 01, 16),
+    count: 2
+  }, {
+    date: new Date(2017, 01, 23),
+    count: 1
+  }, {
+    date: new Date(2017, 01, 30),
+    count: 5
+  }, {
+    date: new Date(2017, 02, 06),
+    count: 7
+  }, {
+    date: new Date(2017, 02, 13),
+    count: 2
+  }, {
+    date: new Date(2017, 02, 20),
+    count: 8
+  }, {
+    date: new Date(2017, 02, 27),
+    count: 3
+  }]
+}, {
+  name: 'Chart 3',
+  points: [{
+    date: new Date(2017, 01, 02),
+    count: 1
+  }, {
+    date: new Date(2017, 01, 09),
+    count: 4
+  }, {
+    date: new Date(2017, 01, 16),
+    count: 7
+  }, {
+    date: new Date(2017, 01, 23),
+    count: 7
+  }, {
+    date: new Date(2017, 01, 30),
+    count: 1
+  }, {
+    date: new Date(2017, 02, 06),
+    count: 7
+  }, {
+    date: new Date(2017, 02, 13),
+    count: 1
+  }, {
+    date: new Date(2017, 02, 20),
+    count: 9
+  }, {
+    date: new Date(2017, 02, 27),
+    count: 2
+  }]
+}, {
+  name: 'Chart 4',
+  points: [{
+    date: new Date(2017, 02, 13),
+    count: 1
+  }, {
+    date: new Date(2017, 02, 20),
+    count: 9
+  }, {
+    date: new Date(2017, 02, 27),
+    count: 2
+  }]
+}, {
+  name: 'Chart 5',
+  points: [{
+    date: new Date(2017, 02, 13),
+    count: 5
+  }, {
+    date: new Date(2017, 02, 20),
+    count: 2
+  }, {
+    date: new Date(2017, 02, 27),
+    count: 2
+  }]
+}, {
+  name: 'Chart 6',
+  points: [{
+    date: new Date(2017, 02, 13),
+    count: 4
+  }, {
+    date: new Date(2017, 02, 20),
+    count: 6
+  }, {
+    date: new Date(2017, 02, 27),
+    count: 2
+  }]
+}, {
+  name: 'Chart 7',
+  points: [{
+    date: new Date(2017, 02, 13),
+    count: 3
+  }, {
+    date: new Date(2017, 02, 20),
+    count: 1
+}, {
+    date: new Date(2017, 02, 27),
+    count: 9
+  }]
+}, {
+  name: 'Chart 8',
+  points: [{
+    date: new Date(2017, 01, 30),
+    count: 20
+  }]
+}];
 ```
 
 ```html
-<sparkline-list
-  results="[[testPoints]]"
-  convert-function="[[convertHistograms]]"
-  x-prop="[[xProp]]"
-  y-prop="[[yProp]]"
-  chart-widths="500px"
-  chart-heights="30px"
-  max-overall-height="150px">
-</sparkline-list>
+<sparkline-list data="[[data]]"></sparkline-list>
 ```
 
 ### Styling

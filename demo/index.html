@@ -20,103 +20,201 @@ limitations under the License.
   </head>
 
   <body unresolved>
-    <dom-bind>
+    <dom-bind id="demo">
+      <style>
+        .level-1 {
+          margin-left: 5px;
+        }
+
+        .level-2 {
+          margin-left: 10px;
+        }
+
+        .level-3 {
+          margin-left: 15px;
+        }
+
+        .level-4 {
+          margin-left: 20px;
+        }
+      </style>
+
       <script>
         (function(document) {
           var demo = document.querySelector('dom-bind');
-          var xProp = "testDate";
-          var yProp = "testCount"
-          demo.xProp = xProp;
-          demo.yProp = yProp;
-          demo.convertHistograms = function(points) {
-            var pointGroupObj = {};
-            var pointGroupArray = [];
-            points.map(function(point) {
-              if(!pointGroupObj[point.group]) {
-                pointGroupObj[point.group] = [];
-              }
-              var newPt = {};
-              newPt[xProp] = point.createdDate;
-              newPt[yProp] = point.value;
-              pointGroupObj[point.group].push(newPt);
-            });
-            for (key in pointGroupObj) {
-              pointGroupArray.push({
-                "pointArray": pointGroupObj[key],
-                "key": key
-              });
-            }
-            return pointGroupArray;
-          };
-          demo.testPoints = [
-            {"createdDate": new Date(2017, 01, 02) , "value": 0, "group": "chart 1"},
-            {"createdDate": new Date(2017, 01, 09) , "value": 3, "group": "chart 1"},
-            {"createdDate": new Date(2017, 01, 16) , "value": 5, "group": "chart 1"},
-            {"createdDate": new Date(2017, 01, 23) , "value": 3, "group": "chart 1"},
-            {"createdDate": new Date(2017, 01, 30) , "value": 9, "group": "chart 1"},
-            {"createdDate": new Date(2017, 02, 06) , "value": 1, "group": "chart 1"},
-            {"createdDate": new Date(2017, 02, 13) , "value": 9, "group": "chart 1"},
-            {"createdDate": new Date(2017, 02, 20) , "value": 7, "group": "chart 1"},
-            {"createdDate": new Date(2017, 02, 27) , "value": 1, "group": "chart 1"},
-            {"createdDate": new Date(2017, 01, 02) , "value": 0, "group": "chart 2"},
-            {"createdDate": new Date(2017, 01, 09) , "value": 6, "group": "chart 2"},
-            {"createdDate": new Date(2017, 01, 16) , "value": 2, "group": "chart 2"},
-            {"createdDate": new Date(2017, 01, 23) , "value": 1, "group": "chart 2"},
-            {"createdDate": new Date(2017, 01, 30) , "value": 5, "group": "chart 2"},
-            {"createdDate": new Date(2017, 02, 06) , "value": 7, "group": "chart 2"},
-            {"createdDate": new Date(2017, 02, 13) , "value": 2, "group": "chart 2"},
-            {"createdDate": new Date(2017, 02, 20) , "value": 8, "group": "chart 2"},
-            {"createdDate": new Date(2017, 02, 27) , "value": 3, "group": "chart 2"},
-            {"createdDate": new Date(2017, 01, 02) , "value": 1, "group": "chart 3"},
-            {"createdDate": new Date(2017, 01, 09) , "value": 4, "group": "chart 3"},
-            {"createdDate": new Date(2017, 01, 16) , "value": 7, "group": "chart 3"},
-            {"createdDate": new Date(2017, 01, 23) , "value": 7, "group": "chart 3"},
-            {"createdDate": new Date(2017, 01, 30) , "value": 1, "group": "chart 3"},
-            {"createdDate": new Date(2017, 02, 06) , "value": 7, "group": "chart 3"},
-            {"createdDate": new Date(2017, 02, 13) , "value": 1, "group": "chart 3"},
-            {"createdDate": new Date(2017, 02, 20) , "value": 9, "group": "chart 3"},
-            {"createdDate": new Date(2017, 02, 27) , "value": 2, "group": "chart 3"},
-            {"createdDate": new Date(2017, 02, 13) , "value": 1, "group": "chart 4"},
-            {"createdDate": new Date(2017, 02, 20) , "value": 9, "group": "chart 4"},
-            {"createdDate": new Date(2017, 02, 27) , "value": 2, "group": "chart 4"},
-            {"createdDate": new Date(2017, 02, 13) , "value": 5, "group": "chart 5"},
-            {"createdDate": new Date(2017, 02, 20) , "value": 2, "group": "chart 5"},
-            {"createdDate": new Date(2017, 02, 27) , "value": 2, "group": "chart 5"},
-            {"createdDate": new Date(2017, 02, 13) , "value": 4, "group": "chart 6"},
-            {"createdDate": new Date(2017, 02, 20) , "value": 6, "group": "chart 6"},
-            {"createdDate": new Date(2017, 02, 27) , "value": 2, "group": "chart 6"},
-            {"createdDate": new Date(2017, 02, 13) , "value": 3, "group": "chart 7"},
-            {"createdDate": new Date(2017, 02, 20) , "value": 1, "group": "chart 7"},
-            {"createdDate": new Date(2017, 02, 27) , "value": 9, "group": "chart 7"}
-          ];
+
+          demo.data = [{
+            name: 'Chart 1',
+            points: [{
+              date: new Date(2017, 01, 02),
+              count: 0
+            }, {
+              date: new Date(2017, 01, 09),
+              count: 3
+            }, {
+              date: new Date(2017, 01, 16),
+              count: 5
+            }, {
+              date: new Date(2017, 01, 23),
+              count: 3
+            }, {
+              date: new Date(2017, 01, 30),
+              count: 9
+            }, {
+              date: new Date(2017, 02, 06),
+              count: 1
+            }, {
+              date: new Date(2017, 02, 13),
+              count: 9
+            }, {
+              date: new Date(2017, 02, 20),
+              count: 7
+            }, {
+              date: new Date(2017, 02, 27),
+              count: 1
+            }]
+          }, {
+            name: 'Chart 2',
+            points: [{
+              date: new Date(2017, 01, 02),
+              count: 0
+            }, {
+              date: new Date(2017, 01, 09),
+              count: 6
+            }, {
+              date: new Date(2017, 01, 16),
+              count: 2
+            }, {
+              date: new Date(2017, 01, 23),
+              count: 1
+            }, {
+              date: new Date(2017, 01, 30),
+              count: 5
+            }, {
+              date: new Date(2017, 02, 06),
+              count: 7
+            }, {
+              date: new Date(2017, 02, 13),
+              count: 2
+            }, {
+              date: new Date(2017, 02, 20),
+              count: 8
+            }, {
+              date: new Date(2017, 02, 27),
+              count: 3
+            }]
+          }, {
+            name: 'Chart 3',
+            points: [{
+              date: new Date(2017, 01, 02),
+              count: 1
+            }, {
+              date: new Date(2017, 01, 09),
+              count: 4
+            }, {
+              date: new Date(2017, 01, 16),
+              count: 7
+            }, {
+              date: new Date(2017, 01, 23),
+              count: 7
+            }, {
+              date: new Date(2017, 01, 30),
+              count: 1
+            }, {
+              date: new Date(2017, 02, 06),
+              count: 7
+            }, {
+              date: new Date(2017, 02, 13),
+              count: 1
+            }, {
+              date: new Date(2017, 02, 20),
+              count: 9
+            }, {
+              date: new Date(2017, 02, 27),
+              count: 2
+            }]
+          }, {
+            name: 'Chart 4',
+            points: [{
+              date: new Date(2017, 02, 13),
+              count: 1
+            }, {
+              date: new Date(2017, 02, 20),
+              count: 9
+            }, {
+              date: new Date(2017, 02, 27),
+              count: 2
+            }]
+          }, {
+            name: 'Chart 5',
+            points: [{
+              date: new Date(2017, 02, 13),
+              count: 5
+            }, {
+              date: new Date(2017, 02, 20),
+              count: 2
+            }, {
+              date: new Date(2017, 02, 27),
+              count: 2
+            }]
+          }, {
+            name: 'Chart 6',
+            points: [{
+              date: new Date(2017, 02, 13),
+              count: 4
+            }, {
+              date: new Date(2017, 02, 20),
+              count: 6
+            }, {
+              date: new Date(2017, 02, 27),
+              count: 2
+            }]
+          }, {
+            name: 'Chart 7',
+            points: [{
+              date: new Date(2017, 02, 13),
+              count: 3
+            }, {
+              date: new Date(2017, 02, 20),
+              count: 1
+          }, {
+              date: new Date(2017, 02, 27),
+              count: 9
+            }]
+          }, {
+            name: 'Chart 8',
+            points: [{
+              date: new Date(2017, 01, 30),
+              count: 20
+            }]
+          }];
+
           demo.stringify = function(data) {
             return JSON.stringify(data);
           };
         })(document);
       </script>
 
-      <template is="dom-bind" id="demo">
-        <div>
-          <p>sparkline-list demo:</p>
-          <p>input points: [
-          </br>
-          <template is="dom-repeat" items=[[testPoints]]>
-            </br><span>{"group":[[item.group]], "value":[[item.value]], "createdDate":[[item.createdDate]]}</span></br>
+      <template is="dom-bind">
+        <sparkline-list data="[[data]]"></sparkline-list>
+
+        </br>
+
+        <div>data: [</div>
+        <template is="dom-repeat" items="[[data]]">
+          <div class="level-1">{</div>
+          <div class="level-2">name: [[item.name]]</div>
+          <div class="level-2">points: [</div>
+          <template is="dom-repeat" items="[[item.points]]" as="point">
+            <div class="level-3">{</div>
+            <div class="level-4">count: [[point.count]]</div>
+            <div class="level-4">date: [[point.date]]</div>
+            <div class="level-3">}</div>
           </template>
-          </p>
-          <p>convert-function: [[convertHistograms]]</p>
-          <p>x-prop: 'formattedDate'</p>
-          <p>y-prop: 'count'</p>
-
-          <br/><br/>
-
-          <sparkline-list
-            results="[[testPoints]]"
-            x-prop="[[xProp]]"
-            y-prop="[[yProp]]"
-            convert-function="[[convertHistograms]]">
-          </sparkline-list>
-        </div>
+          <div class="level-2">]</div>
+          <div class="level-1">}</div>
+        </template>
+        <div>]</div>
       </template>
     </dom-bind>
   </body>

@@ -13,10 +13,10 @@ limitations under the License.
 -->
 
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../d3-import/d3.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../iron-icon/iron-icon.html">
 <link rel="import" href="../iron-icons/iron-icons.html">
-<link rel="import" href="../json-combine/json-combine.html">
 <link rel="import" href="../sparkline-chart/sparkline-chart.html">
 
 <!--
@@ -24,79 +24,155 @@ A Polymer Element that displays a list of spark line charts.
 
 ### Example
 ```js
-var xProp = date;
-var yProp = count;
-var results = [
-  {"createdDate": new Date(2017, 01, 02) , "value": 0, "group": "chart 1"},
-  {"createdDate": new Date(2017, 01, 09) , "value": 3, "group": "chart 1"},
-  {"createdDate": new Date(2017, 01, 16) , "value": 5, "group": "chart 1"},
-  {"createdDate": new Date(2017, 01, 23) , "value": 3, "group": "chart 1"},
-  {"createdDate": new Date(2017, 01, 30) , "value": 9, "group": "chart 1"},
-  {"createdDate": new Date(2017, 02, 06) , "value": 1, "group": "chart 1"},
-  {"createdDate": new Date(2017, 02, 13) , "value": 9, "group": "chart 1"},
-  {"createdDate": new Date(2017, 02, 20) , "value": 7, "group": "chart 1"},
-  {"createdDate": new Date(2017, 02, 27) , "value": 1, "group": "chart 1"},
-  {"createdDate": new Date(2017, 01, 02) , "value": 0, "group": "chart 2"},
-  {"createdDate": new Date(2017, 01, 09) , "value": 6, "group": "chart 2"},
-  {"createdDate": new Date(2017, 01, 16) , "value": 2, "group": "chart 2"},
-  {"createdDate": new Date(2017, 01, 23) , "value": 1, "group": "chart 2"},
-  {"createdDate": new Date(2017, 01, 30) , "value": 5, "group": "chart 2"},
-  {"createdDate": new Date(2017, 02, 06) , "value": 7, "group": "chart 2"},
-  {"createdDate": new Date(2017, 02, 13) , "value": 2, "group": "chart 2"},
-  {"createdDate": new Date(2017, 02, 20) , "value": 8, "group": "chart 2"},
-  {"createdDate": new Date(2017, 02, 27) , "value": 3, "group": "chart 2"},
-  {"createdDate": new Date(2017, 01, 02) , "value": 1, "group": "chart 3"},
-  {"createdDate": new Date(2017, 01, 09) , "value": 4, "group": "chart 3"},
-  {"createdDate": new Date(2017, 01, 16) , "value": 7, "group": "chart 3"},
-  {"createdDate": new Date(2017, 01, 23) , "value": 7, "group": "chart 3"},
-  {"createdDate": new Date(2017, 01, 30) , "value": 1, "group": "chart 3"},
-  {"createdDate": new Date(2017, 02, 06) , "value": 7, "group": "chart 3"},
-  {"createdDate": new Date(2017, 02, 13) , "value": 1, "group": "chart 3"},
-  {"createdDate": new Date(2017, 02, 20) , "value": 9, "group": "chart 3"},
-  {"createdDate": new Date(2017, 02, 27) , "value": 2, "group": "chart 3"},
-  {"createdDate": new Date(2017, 02, 13) , "value": 1, "group": "chart 4"},
-  {"createdDate": new Date(2017, 02, 20) , "value": 9, "group": "chart 4"},
-  {"createdDate": new Date(2017, 02, 27) , "value": 2, "group": "chart 4"},
-  {"createdDate": new Date(2017, 02, 13) , "value": 5, "group": "chart 5"},
-  {"createdDate": new Date(2017, 02, 20) , "value": 2, "group": "chart 5"},
-  {"createdDate": new Date(2017, 02, 27) , "value": 2, "group": "chart 5"},
-  {"createdDate": new Date(2017, 02, 13) , "value": 4, "group": "chart 6"},
-  {"createdDate": new Date(2017, 02, 20) , "value": 6, "group": "chart 6"},
-  {"createdDate": new Date(2017, 02, 27) , "value": 2, "group": "chart 6"},
-  {"createdDate": new Date(2017, 02, 13) , "value": 3, "group": "chart 7"},
-  {"createdDate": new Date(2017, 02, 20) , "value": 1, "group": "chart 7"},
-  {"createdDate": new Date(2017, 02, 27) , "value": 9, "group": "chart 7"}
-];
-
-convertHistograms = function(points) {
-  var pointGroupObj = {};
-  var pointGroupArray = [];
-  points.map(function(point) {
-    if(!pointGroupObj[point.group]) {
-      pointGroupObj[point.group] = [];
-    }
-    var newPt = {};
-    newPt[xProp] = point.createdDate;
-    newPt[yProp] = point.value;
-    pointGroupObj[point.group].push(newPt);
-  });
-  for (key in pointGroupObj) {
-    pointGroupArray.push({
-      "pointArray": pointGroupObj[key],
-      "key": key
-    });
-  }
-  return pointGroupArray;
-};
+demo.data = [{
+  name: 'Chart 1',
+  points: [{
+    date: new Date(2017, 01, 02),
+    count: 0
+  }, {
+    date: new Date(2017, 01, 09),
+    count: 3
+  }, {
+    date: new Date(2017, 01, 16),
+    count: 5
+  }, {
+    date: new Date(2017, 01, 23),
+    count: 3
+  }, {
+    date: new Date(2017, 01, 30),
+    count: 9
+  }, {
+    date: new Date(2017, 02, 06),
+    count: 1
+  }, {
+    date: new Date(2017, 02, 13),
+    count: 9
+  }, {
+    date: new Date(2017, 02, 20),
+    count: 7
+  }, {
+    date: new Date(2017, 02, 27),
+    count: 1
+  }]
+}, {
+  name: 'Chart 2',
+  points: [{
+    date: new Date(2017, 01, 02),
+    count: 0
+  }, {
+    date: new Date(2017, 01, 09),
+    count: 6
+  }, {
+    date: new Date(2017, 01, 16),
+    count: 2
+  }, {
+    date: new Date(2017, 01, 23),
+    count: 1
+  }, {
+    date: new Date(2017, 01, 30),
+    count: 5
+  }, {
+    date: new Date(2017, 02, 06),
+    count: 7
+  }, {
+    date: new Date(2017, 02, 13),
+    count: 2
+  }, {
+    date: new Date(2017, 02, 20),
+    count: 8
+  }, {
+    date: new Date(2017, 02, 27),
+    count: 3
+  }]
+}, {
+  name: 'Chart 3',
+  points: [{
+    date: new Date(2017, 01, 02),
+    count: 1
+  }, {
+    date: new Date(2017, 01, 09),
+    count: 4
+  }, {
+    date: new Date(2017, 01, 16),
+    count: 7
+  }, {
+    date: new Date(2017, 01, 23),
+    count: 7
+  }, {
+    date: new Date(2017, 01, 30),
+    count: 1
+  }, {
+    date: new Date(2017, 02, 06),
+    count: 7
+  }, {
+    date: new Date(2017, 02, 13),
+    count: 1
+  }, {
+    date: new Date(2017, 02, 20),
+    count: 9
+  }, {
+    date: new Date(2017, 02, 27),
+    count: 2
+  }]
+}, {
+  name: 'Chart 4',
+  points: [{
+    date: new Date(2017, 02, 13),
+    count: 1
+  }, {
+    date: new Date(2017, 02, 20),
+    count: 9
+  }, {
+    date: new Date(2017, 02, 27),
+    count: 2
+  }]
+}, {
+  name: 'Chart 5',
+  points: [{
+    date: new Date(2017, 02, 13),
+    count: 5
+  }, {
+    date: new Date(2017, 02, 20),
+    count: 2
+  }, {
+    date: new Date(2017, 02, 27),
+    count: 2
+  }]
+}, {
+  name: 'Chart 6',
+  points: [{
+    date: new Date(2017, 02, 13),
+    count: 4
+  }, {
+    date: new Date(2017, 02, 20),
+    count: 6
+  }, {
+    date: new Date(2017, 02, 27),
+    count: 2
+  }]
+}, {
+  name: 'Chart 7',
+  points: [{
+    date: new Date(2017, 02, 13),
+    count: 3
+  }, {
+    date: new Date(2017, 02, 20),
+    count: 1
+}, {
+    date: new Date(2017, 02, 27),
+    count: 9
+  }]
+}, {
+  name: 'Chart 8',
+  points: [{
+    date: new Date(2017, 01, 30),
+    count: 20
+  }]
+}];
 ```
 
 ```html
-<sparkline-list
-  results="[[testPoints]]"
-  x-prop="[[xProp]]"
-  y-prop="[[yProp]]"
-  convert-function="[[convertHistograms]]">
-</sparkline-list>
+<sparkline-list data="[[data]]"></sparkline-list>
 ```
 
 ### Styling
@@ -243,32 +319,27 @@ Custom property               | Description                            | Default
       }
     </style>
 
-    <json-combine
-      data-in1="[[results]]"
-      data-in2="{}"
-      data-out="{{_sparkArrays}}"
-      combine-function="[[convertFunction]]">
-    </json-combine>
-
-    <template is="dom-repeat" items="[[_sparkArrays]]" as="sparkPoints" initial-count="10">
+    <template is="dom-repeat" items="[[_histograms]]" initial-count="10">
       <div class="layout horizontal center sparkline-wrapper">
-        <template is="dom-if" if="[[icon]]">
-          <iron-icon class$="[[styleClass]]" icon="[[icon]]"></iron-icon>
-        </template>
+        <template is="dom-if" if="[[!hideName]]">
+          <template is="dom-if" if="[[_getProperty(item, iconProperty)]]">
+            <iron-icon class$="[[_getProperty(item, styleClassProperty)]]" icon="[[_getProperty(item, iconProperty)]]"></iron-icon>
+          </template>
 
-        <template is="dom-if" if="[[sparkPoints.link]]">
-          <a class="name" href$="[[sparkPoints.link]]" title$="Open [[sparkPoints.key]]">[[sparkPoints.key]]</a>
-        </template>
+          <template is="dom-if" if="[[_getProperty(item, linkProperty)]]">
+            <a class="name" href$="[[_getProperty(item, linkProperty)]]" title$="Open [[_getProperty(item, nameProperty)]]">[[_getProperty(item, nameProperty)]]</a>
+          </template>
 
-        <template is="dom-if" if="[[!sparkPoints.link]]">
-          <div class="name" title$="[[sparkPoints.key]]">[[sparkPoints.key]]</div>
+          <template is="dom-if" if="[[!_getProperty(item, linkProperty)]]">
+            <div class="name" title$="[[_getProperty(item, nameProperty)]]">[[_getProperty(item, nameProperty)]]</div>
+          </template>
         </template>
 
         <sparkline-chart class="layout horizontal flex"
-          points="[[sparkPoints.pointArray]]"
-          x-prop="[[xProp]]"
-          y-prop="[[yProp]]"
-          style-class="[[styleClass]]">
+          points="[[_getProperty(item, pointsProperty)]]"
+          x-prop="[[xProperty]]"
+          y-prop="[[yProperty]]"
+          style-class="[[_getProperty(item, styleClassProperty)]]">
         </sparkline-chart>
       </div>
     </template>
@@ -277,88 +348,292 @@ Custom property               | Description                            | Default
   <script>
     Polymer({
       is: 'sparkline-list',
+
       properties: {
         /**
          * (Required)
          *
-         * The function used to convert each data array to a drawable set of points.
-         * Output must be an array of objects.
-         * Objects must have a 'key' {String} that will be used for the title of the chart.
-         * Objects must have a 'pointArray' {Array} that is an array of objects that all have x and y properties matching 'xProp' and 'yProp'.
-         * Optionally, objects may have a 'link' {String}.
-         *
-         * @type {Object}
-         */
-        convertFunction: {
-          type: Object
-        },
-
-        /**
-         * The icon for the graphs (if any).
-         *
-         * @type {String}
-         * @default ''
-         */
-        icon: {
-          type: String,
-          value: ''
-        },
-
-        /**
-         * (Required)
-         *
-         * The array of raw input data to be converted to points.
+         * The list of objects containing points for the sparklines.
          *
          * @type {Array}
          */
-        results: {
+        data: {
           type: Array
         },
 
         /**
-         * The style class for the graphs.
+         * (Optional)
+         *
+         * Whether to hide the names and icons.
+         *
+         * @type {Boolean}
+         * @default false
+         */
+        hideName: {
+          type: Boolean,
+          value: false
+        },
+
+        /**
+         * (Optional)
+         *
+         * The property for the icon for the objects in the data (if any).
+         *
+         * @type {String}
+         * @default 'icon'
+         */
+        iconProperty: {
+          type: String,
+          value: 'icon'
+        },
+
+        /**
+         * (Optional)
+         *
+         * The property for the link for the objects in the data (if any).
+         *
+         * @type {String}
+         * @default 'icon'
+         */
+        linkProperty: {
+          type: String,
+          value: 'link'
+        },
+
+        /**
+         * (Optional)
+         *
+         * The property for the name for the objects in the data.
+         *
+         * @type {String}
+         * @default 'name'
+         */
+        nameProperty: {
+          type: String,
+          value: 'name'
+        },
+
+        /**
+         * (Optional)
+         *
+         * The property for the points for the objects in the data.
+         *
+         * @type {String}
+         * @default 'points'
+         */
+        pointsProperty: {
+          type: String,
+          value: 'points'
+        },
+
+        /**
+         * (Optional)
+         *
+         * The property for the style class for the objects in the data (if any).
          *
          * @type {String}
          * @default ''
          */
-        styleClass: {
+        styleClassProperty: {
           type: String,
-          value: ''
+          value: 'styleClass'
         },
 
         /**
-         * The property that will hold the x value (domain) for each point.
+         * (Optional)
+         *
+         * The time interval of the sparklines.  Options:  'day', 'week'
+         *
+         * @type {String}
+         * @default 'week'
+         */
+        timeInterval: {
+          type: String,
+          value: 'week'
+        },
+
+        /**
+         * The property that will hold the x value (domain) for each point.  Must have date objects or strings.
          *
          * @type {String}
          * @default 'date'
          */
-        xProp: {
+        xProperty: {
           type: String,
           value: 'date'
         },
 
         /**
-         * The property that will hold the y value (range) for each point.
+         * The property that will hold the y value (range) for each point.  Must have numbers.
          *
          * @type {String}
          * @default 'count'
          */
-        yProp: {
+        yProperty: {
           type: String,
           value: 'count'
         },
 
         /**
-         * @private
-         *
-         * The array of objects holding information for each sparkline-chart to draw.
-         * Generated by passing results into convertFunction.
+         * The list of objects containing scaled and padded points for the sparklines.
          *
          * @type {Array}
+         * @private
          */
-        _sparkArrays: {
+        _histograms: {
+          computed: '_buildHistograms(data, timeInterval)',
           type: Array
         }
+      },
+
+      /**
+       * Builds the histograms for the sparklines from the given data.
+       *
+       * @param {Array} data
+       * @param {String} timeInterval
+       * @return {Array}
+       * @private
+       */
+      _buildHistograms: function(data, timeInterval) {
+        if(!data || !data.length) {
+          return data;
+        }
+
+        var self = this;
+        return this._padHistograms(this._scaleHistograms(data.map(function(item) {
+          item[self.pointsProperty] = item[self.pointsProperty].map(function(oldPoint) {
+            var newPoint = {};
+            newPoint[self.xProperty] = typeof oldPoint[self.xProperty] === 'string' ? new Date(oldPoint[self.xProperty]) : oldPoint[self.xProperty];
+            newPoint[self.yProperty] = oldPoint[self.yProperty];
+            return newPoint;
+          });
+          return item;
+        })), timeInterval);
+      },
+
+      /**
+       * Returns the object in the given item at the given property.
+       *
+       * @param {Object} item
+       * @param {String} property
+       * @return {Object}
+       * @private
+       */
+      _getProperty: function(item, property) {
+        return item ? item[property] : undefined;
+      },
+
+      /**
+       * Pads the given histogram data so that each point has zero-count values to its left and right if needed.
+       *
+       * @param {Array} data
+       * @param {String} timeInterval
+       * @return {Array}
+       * @private
+       */
+      _padHistograms: function(data, timeInterval) {
+        var xscale = d3.time.scale().domain([new Date(2000, 1, 1), new Date(2000, 1, 2)]).range([0, 1]);
+        var xunscale = d3.time.scale().domain([0, 1]).range([new Date(2000, 1, 1), new Date(2000, 1, 2)]);
+
+        if(timeInterval === 'week') {
+          xscale = d3.time.scale().domain([new Date(2000, 1, 1), new Date(2000, 1, 8)]).range([0, 1]);
+          xunscale = d3.time.scale().domain([0, 1]).range([new Date(2000, 1, 1), new Date(2000, 1, 8)]);
+        }
+
+        var self = this;
+        return data.map(function(item) {
+          var points = [item[self.pointsProperty][0]];
+
+          for(var i = 1; i < item[self.pointsProperty].length; ++i) {
+            var previous = item[self.pointsProperty][i - 1];
+            var next = item[self.pointsProperty][i];
+
+            // Add a zero-count point after the previous point if the previous point is more than one tick away and non-zero.
+            if(previous[self.yProperty] && xscale(next[self.xProperty]) - xscale(previous[self.xProperty]) > 1) {
+              var point = {};
+              point[self.xProperty] = new Date(xunscale(xscale(previous[self.xProperty]) + 1));
+              point[self.yProperty] = 0;
+              points.push(point);
+            }
+
+            // Add a zero-count point before the next point if the next point is more than one tick away and non-zero.
+            if(next[self.yProperty] && xscale(next[self.xProperty]) - xscale(previous[self.xProperty]) > 2) {
+              var point = {};
+              point[self.xProperty] = new Date(xunscale(xscale(next[self.xProperty]) - 1));
+              point[self.yProperty] = 0;
+              points.push(point);
+            }
+
+            // Add the next point.
+            points.push(next);
+          }
+
+          var paddedHistogram = {};
+          paddedHistogram[self.iconProperty] = item[self.iconProperty];
+          paddedHistogram[self.linkProperty] = item[self.linkProperty];
+          paddedHistogram[self.nameProperty] = item[self.nameProperty];
+          paddedHistogram[self.styleClassProperty] = item[self.styleClassProperty];
+          paddedHistogram[self.pointsProperty] = points;
+          return paddedHistogram;
+        });
+      },
+
+      /**
+       * Scales the given histogram data so that each histogram has the same x-axis range.
+       *
+       * @param {Array} data
+       * @return {Array}
+       * @private
+       */
+      _scaleHistograms: function(data) {
+        var self = this;
+        var scaledRange;
+        var ranges = data.map(function(item) {
+          var range = d3.extent(item[self.pointsProperty], function(point) {
+            return point[self.xProperty];
+          });
+
+          if(!scaledRange && range[0] && range[1]) {
+            scaledRange = [range[0], range[1]];
+          }
+
+          if(range[0] && range[0].getTime() < scaledRange[0].getTime()) {
+            scaledRange[0] = range[0];
+          }
+
+          if(range[1] && range[1].getTime() > scaledRange[1].getTime()) {
+            scaledRange[1] = range[1];
+          }
+
+          return range;
+        });
+
+        return ranges.map(function(range, index) {
+          var scaledHistogram = {};
+          scaledHistogram[self.iconProperty] = data[index][self.iconProperty];
+          scaledHistogram[self.linkProperty] = data[index][self.linkProperty];
+          scaledHistogram[self.nameProperty] = data[index][self.nameProperty];
+          scaledHistogram[self.styleClassProperty] = data[index][self.styleClassProperty];
+          scaledHistogram[self.pointsProperty] = [];
+
+          if(range[0].getTime() !== scaledRange[0].getTime()) {
+            var point = {};
+            point[self.xProperty] = new Date(scaledRange[0]);
+            point[self.yProperty] = 0;
+            scaledHistogram[self.pointsProperty].push(point);
+          }
+
+          scaledHistogram[self.pointsProperty] = scaledHistogram[self.pointsProperty].concat(data[index][self.pointsProperty]);
+
+          if(range[1].getTime() !== scaledRange[1].getTime()) {
+            var point = {};
+            point[self.xProperty] = new Date(scaledRange[1]);
+            point[self.yProperty] = 0;
+            scaledHistogram[self.pointsProperty].push(point);
+          }
+
+          return scaledHistogram;
+        });
       }
     });
   </script>
