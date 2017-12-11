@@ -213,15 +213,19 @@ Custom property               | Description                            | Default
         color: var(--primary-text-color);
         font-size: 14px;
         font-weight: 500;
-        min-width: 150px;
+        line-height: 20px;
+        max-height: 20px;
+        min-height: 20px;
         max-width: 150px;
+        min-width: 150px;
         margin-right: 5px;
 
+        /* Needed to fix flexbox layout issues in newer browsers. */
         display: -webkit-box;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: normal;
-        word-break: break-word;
+        word-break: break-all;
         -webkit-line-clamp: 1;
         -webkit-box-orient: vertical;
       }
@@ -232,6 +236,12 @@ Custom property               | Description                            | Default
 
       sparkline-chart {
         margin-right: 5px;
+      }
+
+      sparkline-chart svg {
+        fill: none;
+        stroke: #111;
+        stroke-width: 1;
       }
 
       iron-icon.amber {
@@ -348,6 +358,9 @@ Custom property               | Description                            | Default
   </template>
 
   <script>
+  (function() {
+    'use strict';
+
     Polymer({
       is: 'sparkline-list',
 
@@ -651,5 +664,6 @@ Custom property               | Description                            | Default
         });
       }
     });
+  })();
   </script>
 </dom-module>
