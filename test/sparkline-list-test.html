@@ -48,6 +48,7 @@ limitations under the License.
         assert.equal(element.xProperty, 'date');
         assert.equal(element.yProperty, 'count');
         assert.isUndefined(element._histograms);
+        assert.equal(element._yTop, 0);
       });
 
       test('does not have sparkline-chart elements because data is undefined', function() {
@@ -115,6 +116,7 @@ limitations under the License.
           }]
         }];
 
+        assert.equal(element._yTop, 10);
         assert.equal(element._histograms.length, 2);
         assert.equal(element._histograms[0].name, 'testName1');
         assert.equal(element._histograms[0].points.length, 10);
@@ -190,11 +192,17 @@ limitations under the License.
 
           var lines = Polymer.dom(element.root).querySelectorAll('.sparkline-wrapper sparkline-chart');
           assert.equal(lines.length, 2);
-          assert.equal(lines[0].xProp, 'date');
-          assert.equal(lines[0].yProp, 'count');
+          assert.equal(lines[0].getAttribute('normalized'), '');
+          assert.isUndefined(lines[0].styleClass);
+          assert.equal(lines[0].xProperty, 'date');
+          assert.equal(lines[0].yProperty, 'count');
+          assert.equal(lines[0].getAttribute('zero-base'), '');
           assert.deepEqual(lines[0].points, element._histograms[0].points);
-          assert.equal(lines[1].xProp, 'date');
-          assert.equal(lines[1].yProp, 'count');
+          assert.equal(lines[1].getAttribute('normalized'), '');
+          assert.isUndefined(lines[1].styleClass);
+          assert.equal(lines[1].xProperty, 'date');
+          assert.equal(lines[1].yProperty, 'count');
+          assert.equal(lines[1].getAttribute('zero-base'), '');
           assert.deepEqual(lines[1].points, element._histograms[1].points);
           done();
         });
@@ -231,6 +239,7 @@ limitations under the License.
           }]
         }];
 
+        assert.equal(element._yTop, 10);
         assert.equal(element._histograms.length, 2);
         assert.equal(element._histograms[0].name, 'testName1');
         assert.equal(element._histograms[0].points.length, 10);
@@ -307,11 +316,11 @@ limitations under the License.
 
           var lines = Polymer.dom(element.root).querySelectorAll('.sparkline-wrapper sparkline-chart');
           assert.equal(lines.length, 2);
-          assert.equal(lines[0].xProp, 'date');
-          assert.equal(lines[0].yProp, 'count');
+          assert.equal(lines[0].xProperty, 'date');
+          assert.equal(lines[0].yProperty, 'count');
           assert.deepEqual(lines[0].points, element._histograms[0].points);
-          assert.equal(lines[1].xProp, 'date');
-          assert.equal(lines[1].yProp, 'count');
+          assert.equal(lines[1].xProperty, 'date');
+          assert.equal(lines[1].yProperty, 'count');
           assert.deepEqual(lines[1].points, element._histograms[1].points);
           done();
         });
@@ -361,6 +370,7 @@ limitations under the License.
           }]
         }];
 
+        assert.equal(element._yTop, 10);
         assert.equal(element._histograms.length, 2);
         assert.equal(element._histograms[0].myIcon, 'testIcon1');
         assert.equal(element._histograms[0].myLink, 'testLink1');
@@ -463,12 +473,12 @@ limitations under the License.
           var lines = Polymer.dom(element.root).querySelectorAll('.sparkline-wrapper sparkline-chart');
           assert.equal(lines.length, 2);
           assert.equal(lines[0].styleClass, 'testStyleClass1');
-          assert.equal(lines[0].xProp, 'date');
-          assert.equal(lines[0].yProp, 'count');
+          assert.equal(lines[0].xProperty, 'date');
+          assert.equal(lines[0].yProperty, 'count');
           assert.deepEqual(lines[0].points, element._histograms[0].points);
           assert.equal(lines[1].styleClass, 'testStyleClass2');
-          assert.equal(lines[1].xProp, 'date');
-          assert.equal(lines[1].yProp, 'count');
+          assert.equal(lines[1].xProperty, 'date');
+          assert.equal(lines[1].yProperty, 'count');
           assert.deepEqual(lines[1].points, element._histograms[1].points);
           done();
         });

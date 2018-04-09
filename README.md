@@ -1,5 +1,5 @@
 # sparkline-list
-A Polymer Element showing list of sparkline charts.
+A Polymer Element showing a list of sparkline charts.
 
 ### Example
 ```js
