@@ -235,6 +235,10 @@ Custom property               | Description                            | Default
         color: var(--secondary-text-color);
       }
 
+      .show-more-button {
+        margin-top: 10px;
+      }
+
       sparkline-chart {
         margin-right: 5px;
       }
@@ -331,7 +335,7 @@ Custom property               | Description                            | Default
     </style>
 
     <template is="dom-if" if="[[!hideSparklineChart]]">
-      <template is="dom-repeat" items="[[_histograms]]" initial-count="10">
+      <template is="dom-repeat" items="[[_sparklinesToShow]]">
         <div class="layout horizontal center sparkline-wrapper">
           <template is="dom-if" if="[[!hideName]]">
             <template is="dom-if" if="[[_getProperty(item, iconProperty)]]">
@@ -356,6 +360,16 @@ Custom property               | Description                            | Default
             y-top="[[_yTop]]"
             zero-base>
           </sparkline-chart>
+        </div>
+      </template>
+
+      <template is="dom-if" if="[[_showMore]]">
+        <div class="layout horizontal center-justified">
+          <button-action
+            class="show-more-button"
+            text="[[_createShowMoreText(_sparklines.length, _sparklinesToShow.length, limit)]]"
+            click-listener="[[_createShowMoreListener()]]">
+          </button-action>
         </div>
       </template>
     </template>
@@ -396,6 +410,19 @@ Custom property               | Description                            | Default
         /**
          * (Optional)
          *
+         * Whether to hide the 'show more' button.
+         *
+         * @type {Boolean}
+         * @default false
+         */
+        hideShowMore: {
+          type: Boolean,
+          value: false
+        },
+
+        /**
+         * (Optional)
+         *
          * Whether to hide the sparkline charts.
          *
          * @type {Boolean}
@@ -417,6 +444,19 @@ Custom property               | Description                            | Default
         iconProperty: {
           type: String,
           value: 'icon'
+        },
+
+        /**
+         * (Optional)
+         *
+         * The limit on sparklines to show (or 0 to show everything).
+         *
+         * @type {Number}
+         * @default 10
+         */
+        limit: {
+          type: Number,
+          value: 10
         },
 
         /**
@@ -507,13 +547,34 @@ Custom property               | Description                            | Default
         },
 
         /**
-         * The list of objects containing scaled and padded points for the sparklines.
+         * Whether this component has more items to show.
+         *
+         * @type {Boolean}
+         * @default false
+         * @private
+         */
+        _showMore: {
+          type: Boolean,
+          value: false
+        },
+
+        /**
+         * The list of timeline objects containing scaled and padded points for the sparklines.
          *
          * @type {Array}
          * @private
          */
-        _histograms: {
-          computed: '_buildHistograms(data, timeInterval)',
+        _sparklines: {
+          type: Array
+        },
+
+        /**
+         * The subset of `_sparklines` to show based on `limit`.
+         *
+         * @type {Array}
+         * @private
+         */
+        _sparklinesToShow: {
           type: Array
         },
 
@@ -530,21 +591,26 @@ Custom property               | Description                            | Default
         }
       },
 
+      observers: [
+        '_buildSparklines(data, timeInterval)',
+        '_limitSparklines(_sparklines, limit)'
+      ],
+
       /**
-       * Builds the histograms for the sparklines from the given data.
+       * Builds the sparklines for the sparklines from the given data.
        *
        * @param {Array} data
        * @param {String} timeInterval
-       * @return {Array}
        * @private
        */
-      _buildHistograms: function(data, timeInterval) {
+      _buildSparklines: function(data, timeInterval) {
         if(!data || !data.length) {
-          return data;
+          this.set('_sparklines', data);
+          return;
         }
 
         var self = this;
-        return this._padHistograms(this._scaleHistograms(data.map(function(item) {
+        this.set('_sparklines', this._padSparklines(this._scaleSparklines(data.map(function(item) {
           item[self.pointsProperty] = item[self.pointsProperty].map(function(oldPoint) {
             var newPoint = {};
             newPoint[self.xProperty] = typeof oldPoint[self.xProperty] === 'string' ? new Date(oldPoint[self.xProperty]) : oldPoint[self.xProperty];
@@ -552,7 +618,45 @@ Custom property               | Description                            | Default
             return newPoint;
           });
           return item;
-        })), timeInterval);
+        })), timeInterval));
+      },
+
+      /**
+       * Returns a listener on clicking the Show More button to update `_sparklinesToShow` from `_sparklines` and `limit`.
+       *
+       * @return {Object}
+       * @private
+       */
+      _createShowMoreListener: function() {
+        var self = this;
+        return {
+          onClick: function() {
+            // Use the map function to create a new array (needed to notify observers).
+            var sparklines = self._sparklinesToShow.map(function(item) {
+              return item;
+            });
+            var indexLimit = self.limit ? Math.min(sparklines.length + self.limit, self._sparklines.length) : self._sparklines.length;
+            self.set('_sparklinesToShow', []);
+            for(var i = sparklines.length; i < indexLimit; ++i) {
+              sparklines.push(self._sparklines[i]);
+            }
+            self.set('_sparklinesToShow', sparklines);
+            self.set('_showMore', (sparklines.length < self._sparklines.length));
+          }
+        };
+      },
+
+      /**
+       * Creates and returns the text for the Show More button.
+       *
+       * @param {Number} total
+       * @param {Number} count
+       * @param {Number} limit
+       * @return {String}
+       * @private
+       */
+      _createShowMoreText: function(total, count, limit) {
+        return count < total ? ('Show ' + (limit ? Math.min(limit, total - count) + ' More Timeline' + (Math.min(limit, total - count) > 1 ? 's' : '') : 'All Timelines')) : '';
       },
 
       /**
@@ -568,14 +672,36 @@ Custom property               | Description                            | Default
       },
 
       /**
-       * Pads the given histogram data so that each point has zero-count values to its left and right if needed.
+       * Limits the given sparklines using the given limit and sets `_sparklinesToShow` and `_showMore`.
+       *
+       * @param {Array} sparklines
+       * @param {Number} limit
+       * @private
+       */
+      _limitSparklines: function(sparklines, limit) {
+        if(!sparklines) {
+          return;
+        }
+
+        this.set('_sparklinesToShow', []);
+        var indexLimit = (limit ? Math.min(sparklines.length, limit) : sparklines.length);
+        var sparklinesToShow = [];
+        for(var i = 0; i < indexLimit; ++i) {
+          sparklinesToShow.push(sparklines[i]);
+        }
+        this.set('_sparklinesToShow', sparklinesToShow);
+        this.set('_showMore', (!this.hideShowMore && limit && sparklines.length > limit));
+      },
+
+      /**
+       * Pads the given sparkline data so that each point has zero-count values to its left and right if needed.
        *
        * @param {Array} data
        * @param {String} timeInterval
        * @return {Array}
        * @private
        */
-      _padHistograms: function(data, timeInterval) {
+      _padSparklines: function(data, timeInterval) {
         var xscale = d3.time.scale().domain([new Date(2000, 1, 1), new Date(2000, 1, 2)]).range([0, 1]);
         var xunscale = d3.time.scale().domain([0, 1]).range([new Date(2000, 1, 1), new Date(2000, 1, 2)]);
 
@@ -614,24 +740,24 @@ Custom property               | Description                            | Default
             self._yTop = Math.max(self._yTop, next[self.yProperty]);
           }
 
-          var paddedHistogram = {};
-          paddedHistogram[self.iconProperty] = item[self.iconProperty];
-          paddedHistogram[self.linkProperty] = item[self.linkProperty];
-          paddedHistogram[self.nameProperty] = item[self.nameProperty];
-          paddedHistogram[self.styleClassProperty] = item[self.styleClassProperty];
-          paddedHistogram[self.pointsProperty] = points;
-          return paddedHistogram;
+          var paddedSparkline = {};
+          paddedSparkline[self.iconProperty] = item[self.iconProperty];
+          paddedSparkline[self.linkProperty] = item[self.linkProperty];
+          paddedSparkline[self.nameProperty] = item[self.nameProperty];
+          paddedSparkline[self.styleClassProperty] = item[self.styleClassProperty];
+          paddedSparkline[self.pointsProperty] = points;
+          return paddedSparkline;
         });
       },
 
       /**
-       * Scales the given histogram data so that each histogram has the same x-axis range.
+       * Scales the given sparkline data so that each sparkline has the same x-axis range.
        *
        * @param {Array} data
        * @return {Array}
        * @private
        */
-      _scaleHistograms: function(data) {
+      _scaleSparklines: function(data) {
         var self = this;
         var scaledRange;
         var ranges = data.map(function(item) {
@@ -655,30 +781,30 @@ Custom property               | Description                            | Default
         });
 
         return ranges.map(function(range, index) {
-          var scaledHistogram = {};
-          scaledHistogram[self.iconProperty] = data[index][self.iconProperty];
-          scaledHistogram[self.linkProperty] = data[index][self.linkProperty];
-          scaledHistogram[self.nameProperty] = data[index][self.nameProperty];
-          scaledHistogram[self.styleClassProperty] = data[index][self.styleClassProperty];
-          scaledHistogram[self.pointsProperty] = [];
+          var scaledSparkline = {};
+          scaledSparkline[self.iconProperty] = data[index][self.iconProperty];
+          scaledSparkline[self.linkProperty] = data[index][self.linkProperty];
+          scaledSparkline[self.nameProperty] = data[index][self.nameProperty];
+          scaledSparkline[self.styleClassProperty] = data[index][self.styleClassProperty];
+          scaledSparkline[self.pointsProperty] = [];
 
           if(range[0].getTime() !== scaledRange[0].getTime()) {
             var point = {};
             point[self.xProperty] = new Date(scaledRange[0]);
             point[self.yProperty] = 0;
-            scaledHistogram[self.pointsProperty].push(point);
+            scaledSparkline[self.pointsProperty].push(point);
           }
 
-          scaledHistogram[self.pointsProperty] = scaledHistogram[self.pointsProperty].concat(data[index][self.pointsProperty]);
+          scaledSparkline[self.pointsProperty] = scaledSparkline[self.pointsProperty].concat(data[index][self.pointsProperty]);
 
           if(range[1].getTime() !== scaledRange[1].getTime()) {
             var point = {};
             point[self.xProperty] = new Date(scaledRange[1]);
             point[self.yProperty] = 0;
-            scaledHistogram[self.pointsProperty].push(point);
+            scaledSparkline[self.pointsProperty].push(point);
           }
 
-          return scaledHistogram;
+          return scaledSparkline;
         });
       }
     });

@@ -40,14 +40,17 @@ limitations under the License.
       test('properties are set as expected', function() {
         assert.isUndefined(element.data);
         assert.isFalse(element.hideName);
+        assert.isFalse(element.hideShowMore);
         assert.equal(element.iconProperty, 'icon');
+        assert.equal(element.limit, 10);
         assert.equal(element.linkProperty, 'link');
         assert.equal(element.nameProperty, 'name');
         assert.equal(element.styleClassProperty, 'styleClass');
         assert.equal(element.timeInterval, 'week');
         assert.equal(element.xProperty, 'date');
         assert.equal(element.yProperty, 'count');
-        assert.isUndefined(element._histograms);
+        assert.isUndefined(element._sparklines);
+        assert.isUndefined(element._sparklinesToShow);
         assert.equal(element._yTop, 0);
       });
 
@@ -86,7 +89,7 @@ limitations under the License.
         });
       });
 
-      test('setting data does update _histograms', function() {
+      test('setting data does update _sparklines', function() {
         element.data = [{
           name: 'testName1',
           points: [{
@@ -117,41 +120,41 @@ limitations under the License.
         }];
 
         assert.equal(element._yTop, 10);
-        assert.equal(element._histograms.length, 2);
-        assert.equal(element._histograms[0].name, 'testName1');
-        assert.equal(element._histograms[0].points.length, 10);
-        assert.equal(element._histograms[0].points[0].count, 1);
-        assert.equal(element._histograms[0].points[0].date.toString(), new Date('01/01/2017').toString());
-        assert.equal(element._histograms[0].points[1].count, 2);
-        assert.equal(element._histograms[0].points[1].date.toString(), new Date('01/08/2017').toString());
-        assert.equal(element._histograms[0].points[2].count, 0);
-        assert.equal(element._histograms[0].points[2].date.toString(), new Date('01/15/2017').toString());
-        assert.equal(element._histograms[0].points[3].count, 3);
-        assert.equal(element._histograms[0].points[3].date.toString(), new Date('01/22/2017').toString());
-        assert.equal(element._histograms[0].points[4].count, 4);
-        assert.equal(element._histograms[0].points[4].date.toString(), new Date('01/29/2017').toString());
-        assert.equal(element._histograms[0].points[5].count, 0);
-        assert.equal(element._histograms[0].points[5].date.toString(), new Date('02/05/2017').toString());
-        assert.equal(element._histograms[0].points[6].count, 5);
-        assert.equal(element._histograms[0].points[6].date.toString(), new Date('02/12/2017').toString());
-        assert.equal(element._histograms[0].points[7].count, 0);
-        assert.equal(element._histograms[0].points[7].date.toString(), new Date('02/19/2017').toString());
-        assert.equal(element._histograms[0].points[8].count, 0);
-        assert.equal(element._histograms[0].points[8].date.toString(), new Date('03/05/2017').toString());
-        assert.equal(element._histograms[0].points[9].count, 6);
-        assert.equal(element._histograms[0].points[9].date.toString(), new Date('03/12/2017').toString());
-        assert.equal(element._histograms[1].name, 'testName2');
-        assert.equal(element._histograms[1].points.length, 5);
-        assert.equal(element._histograms[1].points[0].count, 0);
-        assert.equal(element._histograms[1].points[0].date.toString(), new Date('01/01/2017').toString());
-        assert.equal(element._histograms[1].points[1].count, 0);
-        assert.equal(element._histograms[1].points[1].date.toString(), new Date('01/22/2017').toString());
-        assert.equal(element._histograms[1].points[2].count, 10);
-        assert.equal(element._histograms[1].points[2].date.toString(), new Date('01/29/2017').toString());
-        assert.equal(element._histograms[1].points[3].count, 0);
-        assert.equal(element._histograms[1].points[3].date.toString(), new Date('02/05/2017').toString());
-        assert.equal(element._histograms[1].points[4].count, 0);
-        assert.equal(element._histograms[1].points[4].date.toString(), new Date('03/12/2017').toString());
+        assert.equal(element._sparklines.length, 2);
+        assert.equal(element._sparklines[0].name, 'testName1');
+        assert.equal(element._sparklines[0].points.length, 10);
+        assert.equal(element._sparklines[0].points[0].count, 1);
+        assert.equal(element._sparklines[0].points[0].date.toString(), new Date('01/01/2017').toString());
+        assert.equal(element._sparklines[0].points[1].count, 2);
+        assert.equal(element._sparklines[0].points[1].date.toString(), new Date('01/08/2017').toString());
+        assert.equal(element._sparklines[0].points[2].count, 0);
+        assert.equal(element._sparklines[0].points[2].date.toString(), new Date('01/15/2017').toString());
+        assert.equal(element._sparklines[0].points[3].count, 3);
+        assert.equal(element._sparklines[0].points[3].date.toString(), new Date('01/22/2017').toString());
+        assert.equal(element._sparklines[0].points[4].count, 4);
+        assert.equal(element._sparklines[0].points[4].date.toString(), new Date('01/29/2017').toString());
+        assert.equal(element._sparklines[0].points[5].count, 0);
+        assert.equal(element._sparklines[0].points[5].date.toString(), new Date('02/05/2017').toString());
+        assert.equal(element._sparklines[0].points[6].count, 5);
+        assert.equal(element._sparklines[0].points[6].date.toString(), new Date('02/12/2017').toString());
+        assert.equal(element._sparklines[0].points[7].count, 0);
+        assert.equal(element._sparklines[0].points[7].date.toString(), new Date('02/19/2017').toString());
+        assert.equal(element._sparklines[0].points[8].count, 0);
+        assert.equal(element._sparklines[0].points[8].date.toString(), new Date('03/05/2017').toString());
+        assert.equal(element._sparklines[0].points[9].count, 6);
+        assert.equal(element._sparklines[0].points[9].date.toString(), new Date('03/12/2017').toString());
+        assert.equal(element._sparklines[1].name, 'testName2');
+        assert.equal(element._sparklines[1].points.length, 5);
+        assert.equal(element._sparklines[1].points[0].count, 0);
+        assert.equal(element._sparklines[1].points[0].date.toString(), new Date('01/01/2017').toString());
+        assert.equal(element._sparklines[1].points[1].count, 0);
+        assert.equal(element._sparklines[1].points[1].date.toString(), new Date('01/22/2017').toString());
+        assert.equal(element._sparklines[1].points[2].count, 10);
+        assert.equal(element._sparklines[1].points[2].date.toString(), new Date('01/29/2017').toString());
+        assert.equal(element._sparklines[1].points[3].count, 0);
+        assert.equal(element._sparklines[1].points[3].date.toString(), new Date('02/05/2017').toString());
+        assert.equal(element._sparklines[1].points[4].count, 0);
+        assert.equal(element._sparklines[1].points[4].date.toString(), new Date('03/12/2017').toString());
       });
 
       test('setting data does update elements', function(done) {
@@ -197,18 +200,86 @@ limitations under the License.
           assert.equal(lines[0].xProperty, 'date');
           assert.equal(lines[0].yProperty, 'count');
           assert.equal(lines[0].getAttribute('zero-base'), '');
-          assert.deepEqual(lines[0].points, element._histograms[0].points);
+          assert.deepEqual(lines[0].points, element._sparklines[0].points);
           assert.equal(lines[1].getAttribute('normalized'), '');
           assert.isUndefined(lines[1].styleClass);
           assert.equal(lines[1].xProperty, 'date');
           assert.equal(lines[1].yProperty, 'count');
           assert.equal(lines[1].getAttribute('zero-base'), '');
-          assert.deepEqual(lines[1].points, element._histograms[1].points);
+          assert.deepEqual(lines[1].points, element._sparklines[1].points);
           done();
         });
       });
 
-      test('setting data with time interval set to day does update _histograms', function() {
+      test('_buildSparklines does update _sparklines', function() {
+        element._buildSparklines([{
+          name: 'testName1',
+          points: [{
+            count: 1,
+            date: '01/01/2017'
+          }, {
+            count: 2,
+            date: '01/02/2017'
+          }, {
+            count: 3,
+            date: '01/04/2017'
+          }, {
+            count: 4,
+            date: '01/05/2017'
+          }, {
+            count: 5,
+            date: '01/07/2017'
+          }, {
+            count: 6,
+            date: '01/11/2017'
+          }]
+        }, {
+          name: 'testName2',
+          points: [{
+            count: 10,
+            date: '01/05/2017'
+          }]
+        }], 'day');
+
+        assert.equal(element._yTop, 10);
+        assert.equal(element._sparklines.length, 2);
+        assert.equal(element._sparklines[0].name, 'testName1');
+        assert.equal(element._sparklines[0].points.length, 10);
+        assert.equal(element._sparklines[0].points[0].count, 1);
+        assert.equal(element._sparklines[0].points[0].date.toString(), new Date('01/01/2017').toString());
+        assert.equal(element._sparklines[0].points[1].count, 2);
+        assert.equal(element._sparklines[0].points[1].date.toString(), new Date('01/02/2017').toString());
+        assert.equal(element._sparklines[0].points[2].count, 0);
+        assert.equal(element._sparklines[0].points[2].date.toString(), new Date('01/03/2017').toString());
+        assert.equal(element._sparklines[0].points[3].count, 3);
+        assert.equal(element._sparklines[0].points[3].date.toString(), new Date('01/04/2017').toString());
+        assert.equal(element._sparklines[0].points[4].count, 4);
+        assert.equal(element._sparklines[0].points[4].date.toString(), new Date('01/05/2017').toString());
+        assert.equal(element._sparklines[0].points[5].count, 0);
+        assert.equal(element._sparklines[0].points[5].date.toString(), new Date('01/06/2017').toString());
+        assert.equal(element._sparklines[0].points[6].count, 5);
+        assert.equal(element._sparklines[0].points[6].date.toString(), new Date('01/07/2017').toString());
+        assert.equal(element._sparklines[0].points[7].count, 0);
+        assert.equal(element._sparklines[0].points[7].date.toString(), new Date('01/08/2017').toString());
+        assert.equal(element._sparklines[0].points[8].count, 0);
+        assert.equal(element._sparklines[0].points[8].date.toString(), new Date('01/10/2017').toString());
+        assert.equal(element._sparklines[0].points[9].count, 6);
+        assert.equal(element._sparklines[0].points[9].date.toString(), new Date('01/11/2017').toString());
+        assert.equal(element._sparklines[1].name, 'testName2');
+        assert.equal(element._sparklines[1].points.length, 5);
+        assert.equal(element._sparklines[1].points[0].count, 0);
+        assert.equal(element._sparklines[1].points[0].date.toString(), new Date('01/01/2017').toString());
+        assert.equal(element._sparklines[1].points[1].count, 0);
+        assert.equal(element._sparklines[1].points[1].date.toString(), new Date('01/04/2017').toString());
+        assert.equal(element._sparklines[1].points[2].count, 10);
+        assert.equal(element._sparklines[1].points[2].date.toString(), new Date('01/05/2017').toString());
+        assert.equal(element._sparklines[1].points[3].count, 0);
+        assert.equal(element._sparklines[1].points[3].date.toString(), new Date('01/06/2017').toString());
+        assert.equal(element._sparklines[1].points[4].count, 0);
+        assert.equal(element._sparklines[1].points[4].date.toString(), new Date('01/11/2017').toString());
+      });
+
+      test('setting data with time interval set to day does update _sparklines', function() {
         element.timeInterval = 'day';
         element.data = [{
           name: 'testName1',
@@ -240,41 +311,41 @@ limitations under the License.
         }];
 
         assert.equal(element._yTop, 10);
-        assert.equal(element._histograms.length, 2);
-        assert.equal(element._histograms[0].name, 'testName1');
-        assert.equal(element._histograms[0].points.length, 10);
-        assert.equal(element._histograms[0].points[0].count, 1);
-        assert.equal(element._histograms[0].points[0].date.toString(), new Date('01/01/2017').toString());
-        assert.equal(element._histograms[0].points[1].count, 2);
-        assert.equal(element._histograms[0].points[1].date.toString(), new Date('01/02/2017').toString());
-        assert.equal(element._histograms[0].points[2].count, 0);
-        assert.equal(element._histograms[0].points[2].date.toString(), new Date('01/03/2017').toString());
-        assert.equal(element._histograms[0].points[3].count, 3);
-        assert.equal(element._histograms[0].points[3].date.toString(), new Date('01/04/2017').toString());
-        assert.equal(element._histograms[0].points[4].count, 4);
-        assert.equal(element._histograms[0].points[4].date.toString(), new Date('01/05/2017').toString());
-        assert.equal(element._histograms[0].points[5].count, 0);
-        assert.equal(element._histograms[0].points[5].date.toString(), new Date('01/06/2017').toString());
-        assert.equal(element._histograms[0].points[6].count, 5);
-        assert.equal(element._histograms[0].points[6].date.toString(), new Date('01/07/2017').toString());
-        assert.equal(element._histograms[0].points[7].count, 0);
-        assert.equal(element._histograms[0].points[7].date.toString(), new Date('01/08/2017').toString());
-        assert.equal(element._histograms[0].points[8].count, 0);
-        assert.equal(element._histograms[0].points[8].date.toString(), new Date('01/10/2017').toString());
-        assert.equal(element._histograms[0].points[9].count, 6);
-        assert.equal(element._histograms[0].points[9].date.toString(), new Date('01/11/2017').toString());
-        assert.equal(element._histograms[1].name, 'testName2');
-        assert.equal(element._histograms[1].points.length, 5);
-        assert.equal(element._histograms[1].points[0].count, 0);
-        assert.equal(element._histograms[1].points[0].date.toString(), new Date('01/01/2017').toString());
-        assert.equal(element._histograms[1].points[1].count, 0);
-        assert.equal(element._histograms[1].points[1].date.toString(), new Date('01/04/2017').toString());
-        assert.equal(element._histograms[1].points[2].count, 10);
-        assert.equal(element._histograms[1].points[2].date.toString(), new Date('01/05/2017').toString());
-        assert.equal(element._histograms[1].points[3].count, 0);
-        assert.equal(element._histograms[1].points[3].date.toString(), new Date('01/06/2017').toString());
-        assert.equal(element._histograms[1].points[4].count, 0);
-        assert.equal(element._histograms[1].points[4].date.toString(), new Date('01/11/2017').toString());
+        assert.equal(element._sparklines.length, 2);
+        assert.equal(element._sparklines[0].name, 'testName1');
+        assert.equal(element._sparklines[0].points.length, 10);
+        assert.equal(element._sparklines[0].points[0].count, 1);
+        assert.equal(element._sparklines[0].points[0].date.toString(), new Date('01/01/2017').toString());
+        assert.equal(element._sparklines[0].points[1].count, 2);
+        assert.equal(element._sparklines[0].points[1].date.toString(), new Date('01/02/2017').toString());
+        assert.equal(element._sparklines[0].points[2].count, 0);
+        assert.equal(element._sparklines[0].points[2].date.toString(), new Date('01/03/2017').toString());
+        assert.equal(element._sparklines[0].points[3].count, 3);
+        assert.equal(element._sparklines[0].points[3].date.toString(), new Date('01/04/2017').toString());
+        assert.equal(element._sparklines[0].points[4].count, 4);
+        assert.equal(element._sparklines[0].points[4].date.toString(), new Date('01/05/2017').toString());
+        assert.equal(element._sparklines[0].points[5].count, 0);
+        assert.equal(element._sparklines[0].points[5].date.toString(), new Date('01/06/2017').toString());
+        assert.equal(element._sparklines[0].points[6].count, 5);
+        assert.equal(element._sparklines[0].points[6].date.toString(), new Date('01/07/2017').toString());
+        assert.equal(element._sparklines[0].points[7].count, 0);
+        assert.equal(element._sparklines[0].points[7].date.toString(), new Date('01/08/2017').toString());
+        assert.equal(element._sparklines[0].points[8].count, 0);
+        assert.equal(element._sparklines[0].points[8].date.toString(), new Date('01/10/2017').toString());
+        assert.equal(element._sparklines[0].points[9].count, 6);
+        assert.equal(element._sparklines[0].points[9].date.toString(), new Date('01/11/2017').toString());
+        assert.equal(element._sparklines[1].name, 'testName2');
+        assert.equal(element._sparklines[1].points.length, 5);
+        assert.equal(element._sparklines[1].points[0].count, 0);
+        assert.equal(element._sparklines[1].points[0].date.toString(), new Date('01/01/2017').toString());
+        assert.equal(element._sparklines[1].points[1].count, 0);
+        assert.equal(element._sparklines[1].points[1].date.toString(), new Date('01/04/2017').toString());
+        assert.equal(element._sparklines[1].points[2].count, 10);
+        assert.equal(element._sparklines[1].points[2].date.toString(), new Date('01/05/2017').toString());
+        assert.equal(element._sparklines[1].points[3].count, 0);
+        assert.equal(element._sparklines[1].points[3].date.toString(), new Date('01/06/2017').toString());
+        assert.equal(element._sparklines[1].points[4].count, 0);
+        assert.equal(element._sparklines[1].points[4].date.toString(), new Date('01/11/2017').toString());
       });
 
       test('setting data with time interval set to day does update elements', function(done) {
@@ -318,15 +389,15 @@ limitations under the License.
           assert.equal(lines.length, 2);
           assert.equal(lines[0].xProperty, 'date');
           assert.equal(lines[0].yProperty, 'count');
-          assert.deepEqual(lines[0].points, element._histograms[0].points);
+          assert.deepEqual(lines[0].points, element._sparklines[0].points);
           assert.equal(lines[1].xProperty, 'date');
           assert.equal(lines[1].yProperty, 'count');
-          assert.deepEqual(lines[1].points, element._histograms[1].points);
+          assert.deepEqual(lines[1].points, element._sparklines[1].points);
           done();
         });
       });
 
-      test('setting data with custom properties does update _histograms', function() {
+      test('setting data with custom properties does update _sparklines', function() {
         element.iconProperty = 'myIcon';
         element.linkProperty = 'myLink';
         element.nameProperty = 'myName';
@@ -371,47 +442,47 @@ limitations under the License.
         }];
 
         assert.equal(element._yTop, 10);
-        assert.equal(element._histograms.length, 2);
-        assert.equal(element._histograms[0].myIcon, 'testIcon1');
-        assert.equal(element._histograms[0].myLink, 'testLink1');
-        assert.equal(element._histograms[0].myName, 'testName1');
-        assert.equal(element._histograms[0].myStyleClass, 'testStyleClass1');
-        assert.equal(element._histograms[0].myPoints.length, 10);
-        assert.equal(element._histograms[0].myPoints[0].myCount, 1);
-        assert.equal(element._histograms[0].myPoints[0].myDate.toString(), new Date('01/01/2017').toString());
-        assert.equal(element._histograms[0].myPoints[1].myCount, 2);
-        assert.equal(element._histograms[0].myPoints[1].myDate.toString(), new Date('01/02/2017').toString());
-        assert.equal(element._histograms[0].myPoints[2].myCount, 0);
-        assert.equal(element._histograms[0].myPoints[2].myDate.toString(), new Date('01/03/2017').toString());
-        assert.equal(element._histograms[0].myPoints[3].myCount, 3);
-        assert.equal(element._histograms[0].myPoints[3].myDate.toString(), new Date('01/04/2017').toString());
-        assert.equal(element._histograms[0].myPoints[4].myCount, 4);
-        assert.equal(element._histograms[0].myPoints[4].myDate.toString(), new Date('01/05/2017').toString());
-        assert.equal(element._histograms[0].myPoints[5].myCount, 0);
-        assert.equal(element._histograms[0].myPoints[5].myDate.toString(), new Date('01/06/2017').toString());
-        assert.equal(element._histograms[0].myPoints[6].myCount, 5);
-        assert.equal(element._histograms[0].myPoints[6].myDate.toString(), new Date('01/07/2017').toString());
-        assert.equal(element._histograms[0].myPoints[7].myCount, 0);
-        assert.equal(element._histograms[0].myPoints[7].myDate.toString(), new Date('01/08/2017').toString());
-        assert.equal(element._histograms[0].myPoints[8].myCount, 0);
-        assert.equal(element._histograms[0].myPoints[8].myDate.toString(), new Date('01/10/2017').toString());
-        assert.equal(element._histograms[0].myPoints[9].myCount, 6);
-        assert.equal(element._histograms[0].myPoints[9].myDate.toString(), new Date('01/11/2017').toString());
-        assert.equal(element._histograms[1].myIcon, 'testIcon2');
-        assert.equal(element._histograms[1].myLink, 'testLink2');
-        assert.equal(element._histograms[1].myName, 'testName2');
-        assert.equal(element._histograms[1].myStyleClass, 'testStyleClass2');
-        assert.equal(element._histograms[1].myPoints.length, 5);
-        assert.equal(element._histograms[1].myPoints[0].myCount, 0);
-        assert.equal(element._histograms[1].myPoints[0].myDate.toString(), new Date('01/01/2017').toString());
-        assert.equal(element._histograms[1].myPoints[1].myCount, 0);
-        assert.equal(element._histograms[1].myPoints[1].myDate.toString(), new Date('01/04/2017').toString());
-        assert.equal(element._histograms[1].myPoints[2].myCount, 10);
-        assert.equal(element._histograms[1].myPoints[2].myDate.toString(), new Date('01/05/2017').toString());
-        assert.equal(element._histograms[1].myPoints[3].myCount, 0);
-        assert.equal(element._histograms[1].myPoints[3].myDate.toString(), new Date('01/06/2017').toString());
-        assert.equal(element._histograms[1].myPoints[4].myCount, 0);
-        assert.equal(element._histograms[1].myPoints[4].myDate.toString(), new Date('01/11/2017').toString());
+        assert.equal(element._sparklines.length, 2);
+        assert.equal(element._sparklines[0].myIcon, 'testIcon1');
+        assert.equal(element._sparklines[0].myLink, 'testLink1');
+        assert.equal(element._sparklines[0].myName, 'testName1');
+        assert.equal(element._sparklines[0].myStyleClass, 'testStyleClass1');
+        assert.equal(element._sparklines[0].myPoints.length, 10);
+        assert.equal(element._sparklines[0].myPoints[0].myCount, 1);
+        assert.equal(element._sparklines[0].myPoints[0].myDate.toString(), new Date('01/01/2017').toString());
+        assert.equal(element._sparklines[0].myPoints[1].myCount, 2);
+        assert.equal(element._sparklines[0].myPoints[1].myDate.toString(), new Date('01/02/2017').toString());
+        assert.equal(element._sparklines[0].myPoints[2].myCount, 0);
+        assert.equal(element._sparklines[0].myPoints[2].myDate.toString(), new Date('01/03/2017').toString());
+        assert.equal(element._sparklines[0].myPoints[3].myCount, 3);
+        assert.equal(element._sparklines[0].myPoints[3].myDate.toString(), new Date('01/04/2017').toString());
+        assert.equal(element._sparklines[0].myPoints[4].myCount, 4);
+        assert.equal(element._sparklines[0].myPoints[4].myDate.toString(), new Date('01/05/2017').toString());
+        assert.equal(element._sparklines[0].myPoints[5].myCount, 0);
+        assert.equal(element._sparklines[0].myPoints[5].myDate.toString(), new Date('01/06/2017').toString());
+        assert.equal(element._sparklines[0].myPoints[6].myCount, 5);
+        assert.equal(element._sparklines[0].myPoints[6].myDate.toString(), new Date('01/07/2017').toString());
+        assert.equal(element._sparklines[0].myPoints[7].myCount, 0);
+        assert.equal(element._sparklines[0].myPoints[7].myDate.toString(), new Date('01/08/2017').toString());
+        assert.equal(element._sparklines[0].myPoints[8].myCount, 0);
+        assert.equal(element._sparklines[0].myPoints[8].myDate.toString(), new Date('01/10/2017').toString());
+        assert.equal(element._sparklines[0].myPoints[9].myCount, 6);
+        assert.equal(element._sparklines[0].myPoints[9].myDate.toString(), new Date('01/11/2017').toString());
+        assert.equal(element._sparklines[1].myIcon, 'testIcon2');
+        assert.equal(element._sparklines[1].myLink, 'testLink2');
+        assert.equal(element._sparklines[1].myName, 'testName2');
+        assert.equal(element._sparklines[1].myStyleClass, 'testStyleClass2');
+        assert.equal(element._sparklines[1].myPoints.length, 5);
+        assert.equal(element._sparklines[1].myPoints[0].myCount, 0);
+        assert.equal(element._sparklines[1].myPoints[0].myDate.toString(), new Date('01/01/2017').toString());
+        assert.equal(element._sparklines[1].myPoints[1].myCount, 0);
+        assert.equal(element._sparklines[1].myPoints[1].myDate.toString(), new Date('01/04/2017').toString());
+        assert.equal(element._sparklines[1].myPoints[2].myCount, 10);
+        assert.equal(element._sparklines[1].myPoints[2].myDate.toString(), new Date('01/05/2017').toString());
+        assert.equal(element._sparklines[1].myPoints[3].myCount, 0);
+        assert.equal(element._sparklines[1].myPoints[3].myDate.toString(), new Date('01/06/2017').toString());
+        assert.equal(element._sparklines[1].myPoints[4].myCount, 0);
+        assert.equal(element._sparklines[1].myPoints[4].myDate.toString(), new Date('01/11/2017').toString());
       });
 
       test('setting data with icon, link, and style class does update elements', function(done) {
@@ -475,11 +546,396 @@ limitations under the License.
           assert.equal(lines[0].styleClass, 'testStyleClass1');
           assert.equal(lines[0].xProperty, 'date');
           assert.equal(lines[0].yProperty, 'count');
-          assert.deepEqual(lines[0].points, element._histograms[0].points);
+          assert.deepEqual(lines[0].points, element._sparklines[0].points);
           assert.equal(lines[1].styleClass, 'testStyleClass2');
           assert.equal(lines[1].xProperty, 'date');
           assert.equal(lines[1].yProperty, 'count');
-          assert.deepEqual(lines[1].points, element._histograms[1].points);
+          assert.deepEqual(lines[1].points, element._sparklines[1].points);
+          done();
+        });
+      });
+
+      test('_limitSparklines does update _sparklinesToShow', function() {
+        var sparklines = [{
+          name: 'testName1',
+          points: [{
+            count: 1,
+            date: new Date('01/01/2017')
+          }, {
+            count: 2,
+            date: new Date('01/02/2017')
+          }]
+        }, {
+          name: 'testName2',
+          points: [{
+            count: 0,
+            date: new Date('01/03/2017')
+          }, {
+            count: 3,
+            date: new Date('01/04/2017')
+          }]
+        }, {
+          name: 'testName3',
+          points: [{
+            count: 4,
+            date: new Date('01/05/2017')
+          }, {
+            count: 0,
+            date: new Date('01/06/2017')
+          }]
+        }, {
+          name: 'testName4',
+          points: [{
+            count: 5,
+            date: new Date('01/07/2017')
+          }, {
+            count: 0,
+            date: new Date('01/08/2017')
+          }]
+        }, {
+          name: 'testName5',
+          points: [{
+            count: 0,
+            date: new Date('01/10/2017')
+          }, {
+            count: 6,
+            date: new Date('01/11/2017')
+          }]
+        }];
+
+        element._limitSparklines(sparklines, 10);
+        assert.deepEqual(element._sparklinesToShow, sparklines);
+        assert.isFalse(element._showMore);
+
+        element._limitSparklines(sparklines, 5);
+        assert.deepEqual(element._sparklinesToShow, sparklines);
+        assert.isFalse(element._showMore);
+
+        element._limitSparklines(sparklines, 3);
+        assert.deepEqual(element._sparklinesToShow, [{
+          name: 'testName1',
+          points: [{
+            count: 1,
+            date: new Date('01/01/2017')
+          }, {
+            count: 2,
+            date: new Date('01/02/2017')
+          }]
+        }, {
+          name: 'testName2',
+          points: [{
+            count: 0,
+            date: new Date('01/03/2017')
+          }, {
+            count: 3,
+            date: new Date('01/04/2017')
+          }]
+        }, {
+          name: 'testName3',
+          points: [{
+            count: 4,
+            date: new Date('01/05/2017')
+          }, {
+            count: 0,
+            date: new Date('01/06/2017')
+          }]
+        }]);
+        assert.isTrue(element._showMore);
+
+        element._limitSparklines(sparklines, 1);
+        assert.deepEqual(element._sparklinesToShow, [{
+          name: 'testName1',
+          points: [{
+            count: 1,
+            date: new Date('01/01/2017')
+          }, {
+            count: 2,
+            date: new Date('01/02/2017')
+          }]
+        }]);
+        assert.isTrue(element._showMore);
+      });
+
+      test('setting _sparklines and limit does update _sparklinesToShow and _showMore', function() {
+        element.set('_sparklines', [{
+          name: 'testName1',
+          points: [{
+            count: 1,
+            date: new Date('01/01/2017')
+          }, {
+            count: 2,
+            date: new Date('01/02/2017')
+          }]
+        }, {
+          name: 'testName2',
+          points: [{
+            count: 0,
+            date: new Date('01/03/2017')
+          }, {
+            count: 3,
+            date: new Date('01/04/2017')
+          }]
+        }, {
+          name: 'testName3',
+          points: [{
+            count: 4,
+            date: new Date('01/05/2017')
+          }, {
+            count: 0,
+            date: new Date('01/06/2017')
+          }]
+        }, {
+          name: 'testName4',
+          points: [{
+            count: 5,
+            date: new Date('01/07/2017')
+          }, {
+            count: 0,
+            date: new Date('01/08/2017')
+          }]
+        }, {
+          name: 'testName5',
+          points: [{
+            count: 0,
+            date: new Date('01/10/2017')
+          }, {
+            count: 6,
+            date: new Date('01/11/2017')
+          }]
+        }]);
+
+        assert.deepEqual(element._sparklinesToShow, [{
+          name: 'testName1',
+          points: [{
+            count: 1,
+            date: new Date('01/01/2017')
+          }, {
+            count: 2,
+            date: new Date('01/02/2017')
+          }]
+        }, {
+          name: 'testName2',
+          points: [{
+            count: 0,
+            date: new Date('01/03/2017')
+          }, {
+            count: 3,
+            date: new Date('01/04/2017')
+          }]
+        }, {
+          name: 'testName3',
+          points: [{
+            count: 4,
+            date: new Date('01/05/2017')
+          }, {
+            count: 0,
+            date: new Date('01/06/2017')
+          }]
+        }, {
+          name: 'testName4',
+          points: [{
+            count: 5,
+            date: new Date('01/07/2017')
+          }, {
+            count: 0,
+            date: new Date('01/08/2017')
+          }]
+        }, {
+          name: 'testName5',
+          points: [{
+            count: 0,
+            date: new Date('01/10/2017')
+          }, {
+            count: 6,
+            date: new Date('01/11/2017')
+          }]
+        }]);
+        assert.isFalse(element._showMore);
+
+        element.limit = 2;
+        assert.deepEqual(element._sparklinesToShow, [{
+          name: 'testName1',
+          points: [{
+            count: 1,
+            date: new Date('01/01/2017')
+          }, {
+            count: 2,
+            date: new Date('01/02/2017')
+          }]
+        }, {
+          name: 'testName2',
+          points: [{
+            count: 0,
+            date: new Date('01/03/2017')
+          }, {
+            count: 3,
+            date: new Date('01/04/2017')
+          }]
+        }]);
+        assert.isTrue(element._showMore);
+      });
+
+      test('_createShowMoreListener does return expected listener object', function() {
+        var listener = element._createShowMoreListener();
+        assert.isObject(listener);
+        assert.isFunction(listener.onClick);
+
+        element.limit = 2;
+        element.set('_sparklines', [{
+          name: 'testName1',
+          points: [{
+            count: 1,
+            date: new Date('01/01/2017')
+          }, {
+            count: 2,
+            date: new Date('01/02/2017')
+          }]
+        }, {
+          name: 'testName2',
+          points: [{
+            count: 0,
+            date: new Date('01/03/2017')
+          }, {
+            count: 3,
+            date: new Date('01/04/2017')
+          }]
+        }, {
+          name: 'testName3',
+          points: [{
+            count: 4,
+            date: new Date('01/05/2017')
+          }, {
+            count: 0,
+            date: new Date('01/06/2017')
+          }]
+        }, {
+          name: 'testName4',
+          points: [{
+            count: 5,
+            date: new Date('01/07/2017')
+          }, {
+            count: 0,
+            date: new Date('01/08/2017')
+          }]
+        }, {
+          name: 'testName5',
+          points: [{
+            count: 0,
+            date: new Date('01/10/2017')
+          }, {
+            count: 6,
+            date: new Date('01/11/2017')
+          }]
+        }]);
+
+        listener.onClick();
+        assert.deepEqual(element._sparklinesToShow, [{
+          name: 'testName1',
+          points: [{
+            count: 1,
+            date: new Date('01/01/2017')
+          }, {
+            count: 2,
+            date: new Date('01/02/2017')
+          }]
+        }, {
+          name: 'testName2',
+          points: [{
+            count: 0,
+            date: new Date('01/03/2017')
+          }, {
+            count: 3,
+            date: new Date('01/04/2017')
+          }]
+        }, {
+          name: 'testName3',
+          points: [{
+            count: 4,
+            date: new Date('01/05/2017')
+          }, {
+            count: 0,
+            date: new Date('01/06/2017')
+          }]
+        }, {
+          name: 'testName4',
+          points: [{
+            count: 5,
+            date: new Date('01/07/2017')
+          }, {
+            count: 0,
+            date: new Date('01/08/2017')
+          }]
+        }]);
+        assert.isTrue(element._showMore);
+
+        listener.onClick();
+        assert.deepEqual(element._sparklinesToShow, [{
+          name: 'testName1',
+          points: [{
+            count: 1,
+            date: new Date('01/01/2017')
+          }, {
+            count: 2,
+            date: new Date('01/02/2017')
+          }]
+        }, {
+          name: 'testName2',
+          points: [{
+            count: 0,
+            date: new Date('01/03/2017')
+          }, {
+            count: 3,
+            date: new Date('01/04/2017')
+          }]
+        }, {
+          name: 'testName3',
+          points: [{
+            count: 4,
+            date: new Date('01/05/2017')
+          }, {
+            count: 0,
+            date: new Date('01/06/2017')
+          }]
+        }, {
+          name: 'testName4',
+          points: [{
+            count: 5,
+            date: new Date('01/07/2017')
+          }, {
+            count: 0,
+            date: new Date('01/08/2017')
+          }]
+        }, {
+          name: 'testName5',
+          points: [{
+            count: 0,
+            date: new Date('01/10/2017')
+          }, {
+            count: 6,
+            date: new Date('01/11/2017')
+          }]
+        }]);
+        assert.isFalse(element._showMore);
+      });
+
+      test('_createShowMoreText does return expected string', function() {
+        assert.equal(element._createShowMoreText(1, 1, 0), '');
+        assert.equal(element._createShowMoreText(1, 1, 1), '');
+        assert.equal(element._createShowMoreText(10, 1, 1), 'Show 1 More Timeline');
+        assert.equal(element._createShowMoreText(10, 1, 5), 'Show 5 More Timelines');
+        assert.equal(element._createShowMoreText(10, 1, 10), 'Show 9 More Timelines');
+        assert.equal(element._createShowMoreText(10, 1, 0), 'Show All Timelines');
+      });
+
+      test('does hide Show More if _showMore is false', function() {
+        assert.isNull(Polymer.dom(element.root).querySelector('button-action.show-more-button'));
+      });
+
+      test('does show Show More if _showMore is true', function(done) {
+        element._showMore = true;
+
+        flush(function() {
+          assert.isDefined(Polymer.dom(element.root).querySelector('button-action.show-more-button'));
           done();
         });
       });
