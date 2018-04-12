@@ -235,6 +235,11 @@ Custom property               | Description                            | Default
         color: var(--secondary-text-color);
       }
 
+      .labels > span {
+        font-size: 9px;
+        text-align: end;
+      }
+
       .show-more-button {
         margin-top: 10px;
       }
@@ -338,28 +343,31 @@ Custom property               | Description                            | Default
       <template is="dom-repeat" items="[[_sparklinesToShow]]">
         <div class="layout horizontal center sparkline-wrapper">
           <template is="dom-if" if="[[!hideName]]">
-            <template is="dom-if" if="[[_getProperty(item, iconProperty)]]">
-              <iron-icon class$="[[_getProperty(item, styleClassProperty)]]" icon="[[_getProperty(item, iconProperty)]]"></iron-icon>
+            <template is="dom-if" if="[[item.icon]]">
+              <iron-icon class$="[[item.styleClass]]" icon="[[item.icon]]"></iron-icon>
             </template>
 
-            <template is="dom-if" if="[[_getProperty(item, linkProperty)]]">
-              <a class="name" href$="[[_getProperty(item, linkProperty)]]" title$="Open [[_getProperty(item, nameProperty)]]">[[_getProperty(item, nameProperty)]]</a>
+            <template is="dom-if" if="[[item.link]]">
+              <a class="name" href$="[[item.link]]" title$="Open [[item.name]]">[[item.name]]</a>
             </template>
 
-            <template is="dom-if" if="[[!_getProperty(item, linkProperty)]]">
-              <div class="name" title$="[[_getProperty(item, nameProperty)]]">[[_getProperty(item, nameProperty)]]</div>
+            <template is="dom-if" if="[[!item.link]]">
+              <div class="name" title$="[[item.name]]">[[item.name]]</div>
             </template>
           </template>
 
           <sparkline-chart class="layout horizontal flex"
             normalized
-            points="[[_getProperty(item, pointsProperty)]]"
-            style-class="[[_getProperty(item, styleClassProperty)]]"
-            x-property="[[xProperty]]"
-            y-property="[[yProperty]]"
+            points="[[item.points]]"
+            style-class="[[item.styleClass]]"
             y-top="[[_yTop]]"
             zero-base>
           </sparkline-chart>
+
+          <div class="layout vertical labels" style$="width:[[_findLabelWidth(_yTop)]]px;" title$="MIN=[[item.min]] MAX=[[item.max]]">
+            <span class="text-cell">[[item.max]]</span>
+            <span class="text-cell">[[item.min]]</span>
+          </div>
         </div>
       </template>
 
@@ -611,13 +619,19 @@ Custom property               | Description                            | Default
 
         var self = this;
         this.set('_sparklines', this._padSparklines(this._scaleSparklines(data.map(function(item) {
-          item[self.pointsProperty] = item[self.pointsProperty].map(function(oldPoint) {
+          var points = item[self.pointsProperty].map(function(oldPoint) {
             var newPoint = {};
-            newPoint[self.xProperty] = typeof oldPoint[self.xProperty] === 'string' ? new Date(oldPoint[self.xProperty]) : oldPoint[self.xProperty];
-            newPoint[self.yProperty] = oldPoint[self.yProperty];
+            newPoint.x = typeof oldPoint[self.xProperty] === 'string' ? new Date(oldPoint[self.xProperty]) : oldPoint[self.xProperty];
+            newPoint.y = oldPoint[self.yProperty];
             return newPoint;
           });
-          return item;
+          return {
+            icon: item[self.iconProperty],
+            link: item[self.linkProperty],
+            name: item[self.nameProperty],
+            styleClass: item[self.styleClassProperty],
+            points: points
+          };
         })), timeInterval));
       },
 
@@ -660,15 +674,14 @@ Custom property               | Description                            | Default
       },
 
       /**
-       * Returns the object in the given item at the given property.
+       * Returns the width for the minimum and maximum labels.
        *
-       * @param {Object} item
-       * @param {String} property
-       * @return {Object}
+       * @param {Number} yTop
+       * @return {Number}
        * @private
        */
-      _getProperty: function(item, property) {
-        return item ? item[property] : undefined;
+      _findLabelWidth: function(yTop) {
+        return Math.ceil(('' + yTop).length * 5.5);
       },
 
       /**
@@ -712,40 +725,47 @@ Custom property               | Description                            | Default
 
         var self = this;
         return data.map(function(item) {
-          var points = [item[self.pointsProperty][0]];
+          var points = [item.points[0]];
+          var max = 0;
+          var min = 0;
 
-          for(var i = 1; i < item[self.pointsProperty].length; ++i) {
-            var previous = item[self.pointsProperty][i - 1];
-            var next = item[self.pointsProperty][i];
+          for(var i = 1; i < item.points.length; ++i) {
+            var previous = item.points[i - 1];
+            var next = item.points[i];
 
             // Add a zero-count point after the previous point if the previous point is more than one tick away and non-zero.
-            if(previous[self.yProperty] && xscale(next[self.xProperty]) - xscale(previous[self.xProperty]) > 1) {
-              var point = {};
-              point[self.xProperty] = new Date(xunscale(xscale(previous[self.xProperty]) + 1));
-              point[self.yProperty] = 0;
-              points.push(point);
+            if(previous.y && xscale(next.x) - xscale(previous.x) > 1) {
+              points.push({
+                x: new Date(xunscale(xscale(previous.x) + 1)),
+                y: 0
+              });
             }
 
             // Add a zero-count point before the next point if the next point is more than one tick away and non-zero.
-            if(next[self.yProperty] && xscale(next[self.xProperty]) - xscale(previous[self.xProperty]) > 2) {
-              var point = {};
-              point[self.xProperty] = new Date(xunscale(xscale(next[self.xProperty]) - 1));
-              point[self.yProperty] = 0;
-              points.push(point);
+            if(next.y && xscale(next.x) - xscale(previous.x) > 2) {
+              points.push({
+                x: new Date(xunscale(xscale(next.x) - 1)),
+                y: 0
+              });
             }
 
             // Add the next point.
             points.push(next);
 
-            self._yTop = Math.max(self._yTop, next[self.yProperty]);
+            self._yTop = Math.max(self._yTop, next.y);
+            min = Math.min(min, next.y);
+            max = Math.max(max, next.y);
           }
 
-          var paddedSparkline = {};
-          paddedSparkline[self.iconProperty] = item[self.iconProperty];
-          paddedSparkline[self.linkProperty] = item[self.linkProperty];
-          paddedSparkline[self.nameProperty] = item[self.nameProperty];
-          paddedSparkline[self.styleClassProperty] = item[self.styleClassProperty];
-          paddedSparkline[self.pointsProperty] = points;
+          var paddedSparkline = {
+            icon: item.icon,
+            link: item.link,
+            max: ('' + max).replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+            min: ('' + min).replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+            name: item.name,
+            styleClass: item.styleClass,
+            points: points
+          };
           return paddedSparkline;
         });
       },
@@ -761,8 +781,8 @@ Custom property               | Description                            | Default
         var self = this;
         var scaledRange;
         var ranges = data.map(function(item) {
-          var range = d3.extent(item[self.pointsProperty], function(point) {
-            return point[self.xProperty];
+          var range = d3.extent(item.points, function(point) {
+            return point.x;
           });
 
           if(!scaledRange && range[0] && range[1]) {
@@ -781,27 +801,28 @@ Custom property               | Description                            | Default
         });
 
         return ranges.map(function(range, index) {
-          var scaledSparkline = {};
-          scaledSparkline[self.iconProperty] = data[index][self.iconProperty];
-          scaledSparkline[self.linkProperty] = data[index][self.linkProperty];
-          scaledSparkline[self.nameProperty] = data[index][self.nameProperty];
-          scaledSparkline[self.styleClassProperty] = data[index][self.styleClassProperty];
-          scaledSparkline[self.pointsProperty] = [];
+          var scaledSparkline = {
+            icon: data[index].icon,
+            link: data[index].link,
+            name: data[index].name,
+            styleClass: data[index].styleClass,
+            points: []
+          };
 
           if(range[0].getTime() !== scaledRange[0].getTime()) {
-            var point = {};
-            point[self.xProperty] = new Date(scaledRange[0]);
-            point[self.yProperty] = 0;
-            scaledSparkline[self.pointsProperty].push(point);
+            scaledSparkline.points.push({
+              x: new Date(scaledRange[0]),
+              y: 0
+            });
           }
 
-          scaledSparkline[self.pointsProperty] = scaledSparkline[self.pointsProperty].concat(data[index][self.pointsProperty]);
+          scaledSparkline.points = scaledSparkline.points.concat(data[index].points);
 
           if(range[1].getTime() !== scaledRange[1].getTime()) {
-            var point = {};
-            point[self.xProperty] = new Date(scaledRange[1]);
-            point[self.yProperty] = 0;
-            scaledSparkline[self.pointsProperty].push(point);
+            scaledSparkline.points.push({
+              x: new Date(scaledRange[1]),
+              y: 0
+            });
           }
 
           return scaledSparkline;

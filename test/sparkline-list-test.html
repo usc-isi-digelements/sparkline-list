@@ -59,34 +59,11 @@ limitations under the License.
         assert.equal(lines.length, 0);
       });
 
-      test('_getProperty does return correctly', function() {
-        expect(element._getProperty).to.be.a('Function');
-        expect(element._getProperty({}, 'property')).to.not.exist;
-        expect(element._getProperty({
-          property: 'text'
-        }, 'notproperty')).to.not.exist;
-        expect(element._getProperty({
-          notproperty: 'text'
-        }, 'property')).to.not.exist;
-        expect(element._getProperty({
-          property: 'text'
-        }, 'property')).to.equal('text');
-        expect(element._getProperty({
-          property: 10
-        }, 'property')).to.equal(10);
-        expect(element._getProperty({
-          property: true
-        }, 'property')).to.be.true;
-        expect(element._getProperty({
-          property: [1, 2, 3, 4, 5]
-        }, 'property')).to.deep.equal([1, 2, 3, 4, 5]);
-        expect(element._getProperty({
-          property: {
-            key: 'value'
-          }
-        }, 'property')).to.deep.equal({
-          key: 'value'
-        });
+      test('_findLabelWidth does return expected number', function() {
+        assert.equal(element._findLabelWidth(1), 6);
+        assert.equal(element._findLabelWidth(12), 11);
+        assert.equal(element._findLabelWidth(123), 17);
+        assert.equal(element._findLabelWidth(1234), 22);
       });
 
       test('setting data does update _sparklines', function() {
@@ -121,40 +98,44 @@ limitations under the License.
 
         assert.equal(element._yTop, 10);
         assert.equal(element._sparklines.length, 2);
+        assert.equal(element._sparklines[0].max, 6);
+        assert.equal(element._sparklines[0].min, 0);
         assert.equal(element._sparklines[0].name, 'testName1');
         assert.equal(element._sparklines[0].points.length, 10);
-        assert.equal(element._sparklines[0].points[0].count, 1);
-        assert.equal(element._sparklines[0].points[0].date.toString(), new Date('01/01/2017').toString());
-        assert.equal(element._sparklines[0].points[1].count, 2);
-        assert.equal(element._sparklines[0].points[1].date.toString(), new Date('01/08/2017').toString());
-        assert.equal(element._sparklines[0].points[2].count, 0);
-        assert.equal(element._sparklines[0].points[2].date.toString(), new Date('01/15/2017').toString());
-        assert.equal(element._sparklines[0].points[3].count, 3);
-        assert.equal(element._sparklines[0].points[3].date.toString(), new Date('01/22/2017').toString());
-        assert.equal(element._sparklines[0].points[4].count, 4);
-        assert.equal(element._sparklines[0].points[4].date.toString(), new Date('01/29/2017').toString());
-        assert.equal(element._sparklines[0].points[5].count, 0);
-        assert.equal(element._sparklines[0].points[5].date.toString(), new Date('02/05/2017').toString());
-        assert.equal(element._sparklines[0].points[6].count, 5);
-        assert.equal(element._sparklines[0].points[6].date.toString(), new Date('02/12/2017').toString());
-        assert.equal(element._sparklines[0].points[7].count, 0);
-        assert.equal(element._sparklines[0].points[7].date.toString(), new Date('02/19/2017').toString());
-        assert.equal(element._sparklines[0].points[8].count, 0);
-        assert.equal(element._sparklines[0].points[8].date.toString(), new Date('03/05/2017').toString());
-        assert.equal(element._sparklines[0].points[9].count, 6);
-        assert.equal(element._sparklines[0].points[9].date.toString(), new Date('03/12/2017').toString());
+        assert.equal(element._sparklines[0].points[0].y, 1);
+        assert.equal(element._sparklines[0].points[0].x.toString(), new Date('01/01/2017').toString());
+        assert.equal(element._sparklines[0].points[1].y, 2);
+        assert.equal(element._sparklines[0].points[1].x.toString(), new Date('01/08/2017').toString());
+        assert.equal(element._sparklines[0].points[2].y, 0);
+        assert.equal(element._sparklines[0].points[2].x.toString(), new Date('01/15/2017').toString());
+        assert.equal(element._sparklines[0].points[3].y, 3);
+        assert.equal(element._sparklines[0].points[3].x.toString(), new Date('01/22/2017').toString());
+        assert.equal(element._sparklines[0].points[4].y, 4);
+        assert.equal(element._sparklines[0].points[4].x.toString(), new Date('01/29/2017').toString());
+        assert.equal(element._sparklines[0].points[5].y, 0);
+        assert.equal(element._sparklines[0].points[5].x.toString(), new Date('02/05/2017').toString());
+        assert.equal(element._sparklines[0].points[6].y, 5);
+        assert.equal(element._sparklines[0].points[6].x.toString(), new Date('02/12/2017').toString());
+        assert.equal(element._sparklines[0].points[7].y, 0);
+        assert.equal(element._sparklines[0].points[7].x.toString(), new Date('02/19/2017').toString());
+        assert.equal(element._sparklines[0].points[8].y, 0);
+        assert.equal(element._sparklines[0].points[8].x.toString(), new Date('03/05/2017').toString());
+        assert.equal(element._sparklines[0].points[9].y, 6);
+        assert.equal(element._sparklines[0].points[9].x.toString(), new Date('03/12/2017').toString());
+        assert.equal(element._sparklines[1].max, 10);
+        assert.equal(element._sparklines[1].min, 0);
         assert.equal(element._sparklines[1].name, 'testName2');
         assert.equal(element._sparklines[1].points.length, 5);
-        assert.equal(element._sparklines[1].points[0].count, 0);
-        assert.equal(element._sparklines[1].points[0].date.toString(), new Date('01/01/2017').toString());
-        assert.equal(element._sparklines[1].points[1].count, 0);
-        assert.equal(element._sparklines[1].points[1].date.toString(), new Date('01/22/2017').toString());
-        assert.equal(element._sparklines[1].points[2].count, 10);
-        assert.equal(element._sparklines[1].points[2].date.toString(), new Date('01/29/2017').toString());
-        assert.equal(element._sparklines[1].points[3].count, 0);
-        assert.equal(element._sparklines[1].points[3].date.toString(), new Date('02/05/2017').toString());
-        assert.equal(element._sparklines[1].points[4].count, 0);
-        assert.equal(element._sparklines[1].points[4].date.toString(), new Date('03/12/2017').toString());
+        assert.equal(element._sparklines[1].points[0].y, 0);
+        assert.equal(element._sparklines[1].points[0].x.toString(), new Date('01/01/2017').toString());
+        assert.equal(element._sparklines[1].points[1].y, 0);
+        assert.equal(element._sparklines[1].points[1].x.toString(), new Date('01/22/2017').toString());
+        assert.equal(element._sparklines[1].points[2].y, 10);
+        assert.equal(element._sparklines[1].points[2].x.toString(), new Date('01/29/2017').toString());
+        assert.equal(element._sparklines[1].points[3].y, 0);
+        assert.equal(element._sparklines[1].points[3].x.toString(), new Date('02/05/2017').toString());
+        assert.equal(element._sparklines[1].points[4].y, 0);
+        assert.equal(element._sparklines[1].points[4].x.toString(), new Date('03/12/2017').toString());
       });
 
       test('setting data does update elements', function(done) {
@@ -197,14 +178,14 @@ limitations under the License.
           assert.equal(lines.length, 2);
           assert.equal(lines[0].getAttribute('normalized'), '');
           assert.isUndefined(lines[0].styleClass);
-          assert.equal(lines[0].xProperty, 'date');
-          assert.equal(lines[0].yProperty, 'count');
+          assert.isUndefined(lines[0].xProperty);
+          assert.isUndefined(lines[0].yProperty);
           assert.equal(lines[0].getAttribute('zero-base'), '');
           assert.deepEqual(lines[0].points, element._sparklines[0].points);
           assert.equal(lines[1].getAttribute('normalized'), '');
           assert.isUndefined(lines[1].styleClass);
-          assert.equal(lines[1].xProperty, 'date');
-          assert.equal(lines[1].yProperty, 'count');
+          assert.isUndefined(lines[1].xProperty);
+          assert.isUndefined(lines[1].yProperty);
           assert.equal(lines[1].getAttribute('zero-base'), '');
           assert.deepEqual(lines[1].points, element._sparklines[1].points);
           done();
@@ -243,40 +224,44 @@ limitations under the License.
 
         assert.equal(element._yTop, 10);
         assert.equal(element._sparklines.length, 2);
+        assert.equal(element._sparklines[0].max, 6);
+        assert.equal(element._sparklines[0].min, 0);
         assert.equal(element._sparklines[0].name, 'testName1');
         assert.equal(element._sparklines[0].points.length, 10);
-        assert.equal(element._sparklines[0].points[0].count, 1);
-        assert.equal(element._sparklines[0].points[0].date.toString(), new Date('01/01/2017').toString());
-        assert.equal(element._sparklines[0].points[1].count, 2);
-        assert.equal(element._sparklines[0].points[1].date.toString(), new Date('01/02/2017').toString());
-        assert.equal(element._sparklines[0].points[2].count, 0);
-        assert.equal(element._sparklines[0].points[2].date.toString(), new Date('01/03/2017').toString());
-        assert.equal(element._sparklines[0].points[3].count, 3);
-        assert.equal(element._sparklines[0].points[3].date.toString(), new Date('01/04/2017').toString());
-        assert.equal(element._sparklines[0].points[4].count, 4);
-        assert.equal(element._sparklines[0].points[4].date.toString(), new Date('01/05/2017').toString());
-        assert.equal(element._sparklines[0].points[5].count, 0);
-        assert.equal(element._sparklines[0].points[5].date.toString(), new Date('01/06/2017').toString());
-        assert.equal(element._sparklines[0].points[6].count, 5);
-        assert.equal(element._sparklines[0].points[6].date.toString(), new Date('01/07/2017').toString());
-        assert.equal(element._sparklines[0].points[7].count, 0);
-        assert.equal(element._sparklines[0].points[7].date.toString(), new Date('01/08/2017').toString());
-        assert.equal(element._sparklines[0].points[8].count, 0);
-        assert.equal(element._sparklines[0].points[8].date.toString(), new Date('01/10/2017').toString());
-        assert.equal(element._sparklines[0].points[9].count, 6);
-        assert.equal(element._sparklines[0].points[9].date.toString(), new Date('01/11/2017').toString());
+        assert.equal(element._sparklines[0].points[0].y, 1);
+        assert.equal(element._sparklines[0].points[0].x.toString(), new Date('01/01/2017').toString());
+        assert.equal(element._sparklines[0].points[1].y, 2);
+        assert.equal(element._sparklines[0].points[1].x.toString(), new Date('01/02/2017').toString());
+        assert.equal(element._sparklines[0].points[2].y, 0);
+        assert.equal(element._sparklines[0].points[2].x.toString(), new Date('01/03/2017').toString());
+        assert.equal(element._sparklines[0].points[3].y, 3);
+        assert.equal(element._sparklines[0].points[3].x.toString(), new Date('01/04/2017').toString());
+        assert.equal(element._sparklines[0].points[4].y, 4);
+        assert.equal(element._sparklines[0].points[4].x.toString(), new Date('01/05/2017').toString());
+        assert.equal(element._sparklines[0].points[5].y, 0);
+        assert.equal(element._sparklines[0].points[5].x.toString(), new Date('01/06/2017').toString());
+        assert.equal(element._sparklines[0].points[6].y, 5);
+        assert.equal(element._sparklines[0].points[6].x.toString(), new Date('01/07/2017').toString());
+        assert.equal(element._sparklines[0].points[7].y, 0);
+        assert.equal(element._sparklines[0].points[7].x.toString(), new Date('01/08/2017').toString());
+        assert.equal(element._sparklines[0].points[8].y, 0);
+        assert.equal(element._sparklines[0].points[8].x.toString(), new Date('01/10/2017').toString());
+        assert.equal(element._sparklines[0].points[9].y, 6);
+        assert.equal(element._sparklines[0].points[9].x.toString(), new Date('01/11/2017').toString());
+        assert.equal(element._sparklines[1].max, 10);
+        assert.equal(element._sparklines[1].min, 0);
         assert.equal(element._sparklines[1].name, 'testName2');
         assert.equal(element._sparklines[1].points.length, 5);
-        assert.equal(element._sparklines[1].points[0].count, 0);
-        assert.equal(element._sparklines[1].points[0].date.toString(), new Date('01/01/2017').toString());
-        assert.equal(element._sparklines[1].points[1].count, 0);
-        assert.equal(element._sparklines[1].points[1].date.toString(), new Date('01/04/2017').toString());
-        assert.equal(element._sparklines[1].points[2].count, 10);
-        assert.equal(element._sparklines[1].points[2].date.toString(), new Date('01/05/2017').toString());
-        assert.equal(element._sparklines[1].points[3].count, 0);
-        assert.equal(element._sparklines[1].points[3].date.toString(), new Date('01/06/2017').toString());
-        assert.equal(element._sparklines[1].points[4].count, 0);
-        assert.equal(element._sparklines[1].points[4].date.toString(), new Date('01/11/2017').toString());
+        assert.equal(element._sparklines[1].points[0].y, 0);
+        assert.equal(element._sparklines[1].points[0].x.toString(), new Date('01/01/2017').toString());
+        assert.equal(element._sparklines[1].points[1].y, 0);
+        assert.equal(element._sparklines[1].points[1].x.toString(), new Date('01/04/2017').toString());
+        assert.equal(element._sparklines[1].points[2].y, 10);
+        assert.equal(element._sparklines[1].points[2].x.toString(), new Date('01/05/2017').toString());
+        assert.equal(element._sparklines[1].points[3].y, 0);
+        assert.equal(element._sparklines[1].points[3].x.toString(), new Date('01/06/2017').toString());
+        assert.equal(element._sparklines[1].points[4].y, 0);
+        assert.equal(element._sparklines[1].points[4].x.toString(), new Date('01/11/2017').toString());
       });
 
       test('setting data with time interval set to day does update _sparklines', function() {
@@ -312,40 +297,44 @@ limitations under the License.
 
         assert.equal(element._yTop, 10);
         assert.equal(element._sparklines.length, 2);
+        assert.equal(element._sparklines[0].max, 6);
+        assert.equal(element._sparklines[0].min, 0);
         assert.equal(element._sparklines[0].name, 'testName1');
         assert.equal(element._sparklines[0].points.length, 10);
-        assert.equal(element._sparklines[0].points[0].count, 1);
-        assert.equal(element._sparklines[0].points[0].date.toString(), new Date('01/01/2017').toString());
-        assert.equal(element._sparklines[0].points[1].count, 2);
-        assert.equal(element._sparklines[0].points[1].date.toString(), new Date('01/02/2017').toString());
-        assert.equal(element._sparklines[0].points[2].count, 0);
-        assert.equal(element._sparklines[0].points[2].date.toString(), new Date('01/03/2017').toString());
-        assert.equal(element._sparklines[0].points[3].count, 3);
-        assert.equal(element._sparklines[0].points[3].date.toString(), new Date('01/04/2017').toString());
-        assert.equal(element._sparklines[0].points[4].count, 4);
-        assert.equal(element._sparklines[0].points[4].date.toString(), new Date('01/05/2017').toString());
-        assert.equal(element._sparklines[0].points[5].count, 0);
-        assert.equal(element._sparklines[0].points[5].date.toString(), new Date('01/06/2017').toString());
-        assert.equal(element._sparklines[0].points[6].count, 5);
-        assert.equal(element._sparklines[0].points[6].date.toString(), new Date('01/07/2017').toString());
-        assert.equal(element._sparklines[0].points[7].count, 0);
-        assert.equal(element._sparklines[0].points[7].date.toString(), new Date('01/08/2017').toString());
-        assert.equal(element._sparklines[0].points[8].count, 0);
-        assert.equal(element._sparklines[0].points[8].date.toString(), new Date('01/10/2017').toString());
-        assert.equal(element._sparklines[0].points[9].count, 6);
-        assert.equal(element._sparklines[0].points[9].date.toString(), new Date('01/11/2017').toString());
+        assert.equal(element._sparklines[0].points[0].y, 1);
+        assert.equal(element._sparklines[0].points[0].x.toString(), new Date('01/01/2017').toString());
+        assert.equal(element._sparklines[0].points[1].y, 2);
+        assert.equal(element._sparklines[0].points[1].x.toString(), new Date('01/02/2017').toString());
+        assert.equal(element._sparklines[0].points[2].y, 0);
+        assert.equal(element._sparklines[0].points[2].x.toString(), new Date('01/03/2017').toString());
+        assert.equal(element._sparklines[0].points[3].y, 3);
+        assert.equal(element._sparklines[0].points[3].x.toString(), new Date('01/04/2017').toString());
+        assert.equal(element._sparklines[0].points[4].y, 4);
+        assert.equal(element._sparklines[0].points[4].x.toString(), new Date('01/05/2017').toString());
+        assert.equal(element._sparklines[0].points[5].y, 0);
+        assert.equal(element._sparklines[0].points[5].x.toString(), new Date('01/06/2017').toString());
+        assert.equal(element._sparklines[0].points[6].y, 5);
+        assert.equal(element._sparklines[0].points[6].x.toString(), new Date('01/07/2017').toString());
+        assert.equal(element._sparklines[0].points[7].y, 0);
+        assert.equal(element._sparklines[0].points[7].x.toString(), new Date('01/08/2017').toString());
+        assert.equal(element._sparklines[0].points[8].y, 0);
+        assert.equal(element._sparklines[0].points[8].x.toString(), new Date('01/10/2017').toString());
+        assert.equal(element._sparklines[0].points[9].y, 6);
+        assert.equal(element._sparklines[0].points[9].x.toString(), new Date('01/11/2017').toString());
+        assert.equal(element._sparklines[1].max, 10);
+        assert.equal(element._sparklines[1].min, 0);
         assert.equal(element._sparklines[1].name, 'testName2');
         assert.equal(element._sparklines[1].points.length, 5);
-        assert.equal(element._sparklines[1].points[0].count, 0);
-        assert.equal(element._sparklines[1].points[0].date.toString(), new Date('01/01/2017').toString());
-        assert.equal(element._sparklines[1].points[1].count, 0);
-        assert.equal(element._sparklines[1].points[1].date.toString(), new Date('01/04/2017').toString());
-        assert.equal(element._sparklines[1].points[2].count, 10);
-        assert.equal(element._sparklines[1].points[2].date.toString(), new Date('01/05/2017').toString());
-        assert.equal(element._sparklines[1].points[3].count, 0);
-        assert.equal(element._sparklines[1].points[3].date.toString(), new Date('01/06/2017').toString());
-        assert.equal(element._sparklines[1].points[4].count, 0);
-        assert.equal(element._sparklines[1].points[4].date.toString(), new Date('01/11/2017').toString());
+        assert.equal(element._sparklines[1].points[0].y, 0);
+        assert.equal(element._sparklines[1].points[0].x.toString(), new Date('01/01/2017').toString());
+        assert.equal(element._sparklines[1].points[1].y, 0);
+        assert.equal(element._sparklines[1].points[1].x.toString(), new Date('01/04/2017').toString());
+        assert.equal(element._sparklines[1].points[2].y, 10);
+        assert.equal(element._sparklines[1].points[2].x.toString(), new Date('01/05/2017').toString());
+        assert.equal(element._sparklines[1].points[3].y, 0);
+        assert.equal(element._sparklines[1].points[3].x.toString(), new Date('01/06/2017').toString());
+        assert.equal(element._sparklines[1].points[4].y, 0);
+        assert.equal(element._sparklines[1].points[4].x.toString(), new Date('01/11/2017').toString());
       });
 
       test('setting data with time interval set to day does update elements', function(done) {
@@ -387,11 +376,11 @@ limitations under the License.
 
           var lines = Polymer.dom(element.root).querySelectorAll('.sparkline-wrapper sparkline-chart');
           assert.equal(lines.length, 2);
-          assert.equal(lines[0].xProperty, 'date');
-          assert.equal(lines[0].yProperty, 'count');
+          assert.isUndefined(lines[0].xProperty);
+          assert.isUndefined(lines[0].yProperty);
           assert.deepEqual(lines[0].points, element._sparklines[0].points);
-          assert.equal(lines[1].xProperty, 'date');
-          assert.equal(lines[1].yProperty, 'count');
+          assert.isUndefined(lines[1].xProperty);
+          assert.isUndefined(lines[1].yProperty);
           assert.deepEqual(lines[1].points, element._sparklines[1].points);
           done();
         });
@@ -443,46 +432,50 @@ limitations under the License.
 
         assert.equal(element._yTop, 10);
         assert.equal(element._sparklines.length, 2);
-        assert.equal(element._sparklines[0].myIcon, 'testIcon1');
-        assert.equal(element._sparklines[0].myLink, 'testLink1');
-        assert.equal(element._sparklines[0].myName, 'testName1');
-        assert.equal(element._sparklines[0].myStyleClass, 'testStyleClass1');
-        assert.equal(element._sparklines[0].myPoints.length, 10);
-        assert.equal(element._sparklines[0].myPoints[0].myCount, 1);
-        assert.equal(element._sparklines[0].myPoints[0].myDate.toString(), new Date('01/01/2017').toString());
-        assert.equal(element._sparklines[0].myPoints[1].myCount, 2);
-        assert.equal(element._sparklines[0].myPoints[1].myDate.toString(), new Date('01/02/2017').toString());
-        assert.equal(element._sparklines[0].myPoints[2].myCount, 0);
-        assert.equal(element._sparklines[0].myPoints[2].myDate.toString(), new Date('01/03/2017').toString());
-        assert.equal(element._sparklines[0].myPoints[3].myCount, 3);
-        assert.equal(element._sparklines[0].myPoints[3].myDate.toString(), new Date('01/04/2017').toString());
-        assert.equal(element._sparklines[0].myPoints[4].myCount, 4);
-        assert.equal(element._sparklines[0].myPoints[4].myDate.toString(), new Date('01/05/2017').toString());
-        assert.equal(element._sparklines[0].myPoints[5].myCount, 0);
-        assert.equal(element._sparklines[0].myPoints[5].myDate.toString(), new Date('01/06/2017').toString());
-        assert.equal(element._sparklines[0].myPoints[6].myCount, 5);
-        assert.equal(element._sparklines[0].myPoints[6].myDate.toString(), new Date('01/07/2017').toString());
-        assert.equal(element._sparklines[0].myPoints[7].myCount, 0);
-        assert.equal(element._sparklines[0].myPoints[7].myDate.toString(), new Date('01/08/2017').toString());
-        assert.equal(element._sparklines[0].myPoints[8].myCount, 0);
-        assert.equal(element._sparklines[0].myPoints[8].myDate.toString(), new Date('01/10/2017').toString());
-        assert.equal(element._sparklines[0].myPoints[9].myCount, 6);
-        assert.equal(element._sparklines[0].myPoints[9].myDate.toString(), new Date('01/11/2017').toString());
-        assert.equal(element._sparklines[1].myIcon, 'testIcon2');
-        assert.equal(element._sparklines[1].myLink, 'testLink2');
-        assert.equal(element._sparklines[1].myName, 'testName2');
-        assert.equal(element._sparklines[1].myStyleClass, 'testStyleClass2');
-        assert.equal(element._sparklines[1].myPoints.length, 5);
-        assert.equal(element._sparklines[1].myPoints[0].myCount, 0);
-        assert.equal(element._sparklines[1].myPoints[0].myDate.toString(), new Date('01/01/2017').toString());
-        assert.equal(element._sparklines[1].myPoints[1].myCount, 0);
-        assert.equal(element._sparklines[1].myPoints[1].myDate.toString(), new Date('01/04/2017').toString());
-        assert.equal(element._sparklines[1].myPoints[2].myCount, 10);
-        assert.equal(element._sparklines[1].myPoints[2].myDate.toString(), new Date('01/05/2017').toString());
-        assert.equal(element._sparklines[1].myPoints[3].myCount, 0);
-        assert.equal(element._sparklines[1].myPoints[3].myDate.toString(), new Date('01/06/2017').toString());
-        assert.equal(element._sparklines[1].myPoints[4].myCount, 0);
-        assert.equal(element._sparklines[1].myPoints[4].myDate.toString(), new Date('01/11/2017').toString());
+        assert.equal(element._sparklines[0].icon, 'testIcon1');
+        assert.equal(element._sparklines[0].link, 'testLink1');
+        assert.equal(element._sparklines[0].max, 6);
+        assert.equal(element._sparklines[0].min, 0);
+        assert.equal(element._sparklines[0].name, 'testName1');
+        assert.equal(element._sparklines[0].styleClass, 'testStyleClass1');
+        assert.equal(element._sparklines[0].points.length, 10);
+        assert.equal(element._sparklines[0].points[0].y, 1);
+        assert.equal(element._sparklines[0].points[0].x.toString(), new Date('01/01/2017').toString());
+        assert.equal(element._sparklines[0].points[1].y, 2);
+        assert.equal(element._sparklines[0].points[1].x.toString(), new Date('01/02/2017').toString());
+        assert.equal(element._sparklines[0].points[2].y, 0);
+        assert.equal(element._sparklines[0].points[2].x.toString(), new Date('01/03/2017').toString());
+        assert.equal(element._sparklines[0].points[3].y, 3);
+        assert.equal(element._sparklines[0].points[3].x.toString(), new Date('01/04/2017').toString());
+        assert.equal(element._sparklines[0].points[4].y, 4);
+        assert.equal(element._sparklines[0].points[4].x.toString(), new Date('01/05/2017').toString());
+        assert.equal(element._sparklines[0].points[5].y, 0);
+        assert.equal(element._sparklines[0].points[5].x.toString(), new Date('01/06/2017').toString());
+        assert.equal(element._sparklines[0].points[6].y, 5);
+        assert.equal(element._sparklines[0].points[6].x.toString(), new Date('01/07/2017').toString());
+        assert.equal(element._sparklines[0].points[7].y, 0);
+        assert.equal(element._sparklines[0].points[7].x.toString(), new Date('01/08/2017').toString());
+        assert.equal(element._sparklines[0].points[8].y, 0);
+        assert.equal(element._sparklines[0].points[8].x.toString(), new Date('01/10/2017').toString());
+        assert.equal(element._sparklines[0].points[9].y, 6);
+        assert.equal(element._sparklines[0].points[9].x.toString(), new Date('01/11/2017').toString());
+        assert.equal(element._sparklines[1].icon, 'testIcon2');
+        assert.equal(element._sparklines[1].link, 'testLink2');
+        assert.equal(element._sparklines[1].max, 10);
+        assert.equal(element._sparklines[1].min, 0);
+        assert.equal(element._sparklines[1].name, 'testName2');
+        assert.equal(element._sparklines[1].styleClass, 'testStyleClass2');
+        assert.equal(element._sparklines[1].points.length, 5);
+        assert.equal(element._sparklines[1].points[0].y, 0);
+        assert.equal(element._sparklines[1].points[0].x.toString(), new Date('01/01/2017').toString());
+        assert.equal(element._sparklines[1].points[1].y, 0);
+        assert.equal(element._sparklines[1].points[1].x.toString(), new Date('01/04/2017').toString());
+        assert.equal(element._sparklines[1].points[2].y, 10);
+        assert.equal(element._sparklines[1].points[2].x.toString(), new Date('01/05/2017').toString());
+        assert.equal(element._sparklines[1].points[3].y, 0);
+        assert.equal(element._sparklines[1].points[3].x.toString(), new Date('01/06/2017').toString());
+        assert.equal(element._sparklines[1].points[4].y, 0);
+        assert.equal(element._sparklines[1].points[4].x.toString(), new Date('01/11/2017').toString());
       });
 
       test('setting data with icon, link, and style class does update elements', function(done) {
@@ -544,12 +537,12 @@ limitations under the License.
           var lines = Polymer.dom(element.root).querySelectorAll('.sparkline-wrapper sparkline-chart');
           assert.equal(lines.length, 2);
           assert.equal(lines[0].styleClass, 'testStyleClass1');
-          assert.equal(lines[0].xProperty, 'date');
-          assert.equal(lines[0].yProperty, 'count');
+          assert.isUndefined(lines[0].xProperty);
+          assert.isUndefined(lines[0].yProperty);
           assert.deepEqual(lines[0].points, element._sparklines[0].points);
           assert.equal(lines[1].styleClass, 'testStyleClass2');
-          assert.equal(lines[1].xProperty, 'date');
-          assert.equal(lines[1].yProperty, 'count');
+          assert.isUndefined(lines[1].xProperty);
+          assert.isUndefined(lines[1].yProperty);
           assert.deepEqual(lines[1].points, element._sparklines[1].points);
           done();
         });
