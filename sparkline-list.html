@@ -14,9 +14,8 @@ limitations under the License.
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../d3-import/d3.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="../iron-icon/iron-icon.html">
-<link rel="import" href="../iron-icons/iron-icons.html">
 <link rel="import" href="../sparkline-chart/sparkline-chart.html">
+<link rel="import" href="../stylized-icon/stylized-icon.html">
 
 <!--
 A Polymer Element showing a list of sparkline charts.
@@ -201,11 +200,8 @@ Custom property               | Description                            | Default
         margin-bottom: 5px;
       }
 
-      iron-icon {
-        --iron-icon-height: 20px;
-        --iron-icon-width: 20px;
+      stylized-icon {
         margin-right: 5px;
-        min-width: 20px;
       }
 
       .name {
@@ -253,90 +249,6 @@ Custom property               | Description                            | Default
         stroke: #111;
         stroke-width: 1;
       }
-
-      iron-icon.amber {
-        color: var(--paper-amber-600);
-      }
-
-      iron-icon.black {
-        color: #111;
-      }
-
-      iron-icon.blue {
-        color: var(--paper-blue-600);
-      }
-
-      iron-icon.blue-grey {
-        color: var(--paper-blue-grey-600);
-      }
-
-      iron-icon.brown {
-        color: var(--paper-brown-600);
-      }
-
-      iron-icon.cyan {
-        color: var(--paper-cyan-600);
-      }
-
-      iron-icon.deep-orange {
-        color: var(--paper-deep-orange-600);
-      }
-
-      iron-icon.deep-purple {
-        color: var(--paper-deep-purple-600);
-      }
-
-      iron-icon.green {
-        color: var(--paper-green-600);
-      }
-
-      iron-icon.grey {
-        color: var(--paper-grey-600);
-      }
-
-      iron-icon.indigo {
-        color: var(--paper-indigo-600);
-      }
-
-      iron-icon.light-blue {
-        color: var(--paper-light-blue-600);
-      }
-
-      iron-icon.light-green {
-        color: var(--paper-light-green-600);
-      }
-
-      iron-icon.lime {
-        color: var(--paper-lime-600);
-      }
-
-      iron-icon.orange {
-        color: var(--paper-orange-600);
-      }
-
-      iron-icon.pink {
-        color: var(--paper-pink-600);
-      }
-
-      iron-icon.purple {
-        color: var(--paper-purple-600);
-      }
-
-      iron-icon.red {
-        color: var(--paper-red-600);
-      }
-
-      iron-icon.teal {
-        color: var(--paper-teal-600);
-      }
-
-      iron-icon.white {
-        color: #fff;
-      }
-
-      iron-icon.yellow {
-        color: var(--paper-yellow-600);
-      }
     </style>
 
     <template is="dom-if" if="[[!hideSparklineChart]]">
@@ -344,7 +256,7 @@ Custom property               | Description                            | Default
         <div class="layout horizontal center sparkline-wrapper">
           <template is="dom-if" if="[[!hideName]]">
             <template is="dom-if" if="[[item.icon]]">
-              <iron-icon class$="[[item.styleClass]]" icon="[[item.icon]]"></iron-icon>
+              <stylized-icon icon="[[item.icon]]" style-class="[[item.styleClass]]"></stylized-icon>
             </template>
 
             <template is="dom-if" if="[[item.link]]">
@@ -726,8 +638,9 @@ Custom property               | Description                            | Default
         var self = this;
         return data.map(function(item) {
           var points = [item.points[0]];
-          var max = 0;
-          var min = 0;
+          self._yTop = Math.max(self._yTop, item.points[0].y);
+          var min = item.points[0].y;
+          var max = item.points[0].y;
 
           for(var i = 1; i < item.points.length; ++i) {
             var previous = item.points[i - 1];

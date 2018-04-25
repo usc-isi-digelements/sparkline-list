@@ -1,7 +1,7 @@
 {
   "name": "sparkline-list",
   "description": "A Polymer Element showing a list of sparkline charts.",
-  "version": "2.4.1",
+  "version": "2.4.2",
   "authors": [
     "Next Century Corporation"
   ],
@@ -20,9 +20,8 @@
   "dependencies": {
     "polymer": "Polymer/polymer#^2.0.2",
     "iron-flex-layout": "PolymerElements/iron-flex-layout#^2.0.0",
-    "iron-icon": "PolymerElements/iron-icon#^2.0.0",
-    "iron-icons": "PolymerElements/iron-icons#^2.0.0",
-    "sparkline-chart" : "DigElements/sparkline-chart#2.2.1"
+    "sparkline-chart" : "DigElements/sparkline-chart#2.2.2",
+    "stylized-icon": "DigElements/stylized-icon#2.0.0"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^2.0.0",

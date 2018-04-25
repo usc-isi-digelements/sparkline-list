@@ -99,7 +99,7 @@ limitations under the License.
         assert.equal(element._yTop, 10);
         assert.equal(element._sparklines.length, 2);
         assert.equal(element._sparklines[0].max, 6);
-        assert.equal(element._sparklines[0].min, 0);
+        assert.equal(element._sparklines[0].min, 1);
         assert.equal(element._sparklines[0].name, 'testName1');
         assert.equal(element._sparklines[0].points.length, 10);
         assert.equal(element._sparklines[0].points[0].y, 1);
@@ -178,14 +178,14 @@ limitations under the License.
           assert.equal(lines.length, 2);
           assert.equal(lines[0].getAttribute('normalized'), '');
           assert.isUndefined(lines[0].styleClass);
-          assert.isUndefined(lines[0].xProperty);
-          assert.isUndefined(lines[0].yProperty);
+          assert.equal(lines[0].xProperty, 'x');
+          assert.equal(lines[0].yProperty, 'y');
           assert.equal(lines[0].getAttribute('zero-base'), '');
           assert.deepEqual(lines[0].points, element._sparklines[0].points);
           assert.equal(lines[1].getAttribute('normalized'), '');
           assert.isUndefined(lines[1].styleClass);
-          assert.isUndefined(lines[1].xProperty);
-          assert.isUndefined(lines[1].yProperty);
+          assert.equal(lines[1].xProperty, 'x');
+          assert.equal(lines[1].yProperty, 'y');
           assert.equal(lines[1].getAttribute('zero-base'), '');
           assert.deepEqual(lines[1].points, element._sparklines[1].points);
           done();
@@ -225,7 +225,7 @@ limitations under the License.
         assert.equal(element._yTop, 10);
         assert.equal(element._sparklines.length, 2);
         assert.equal(element._sparklines[0].max, 6);
-        assert.equal(element._sparklines[0].min, 0);
+        assert.equal(element._sparklines[0].min, 1);
         assert.equal(element._sparklines[0].name, 'testName1');
         assert.equal(element._sparklines[0].points.length, 10);
         assert.equal(element._sparklines[0].points[0].y, 1);
@@ -298,7 +298,7 @@ limitations under the License.
         assert.equal(element._yTop, 10);
         assert.equal(element._sparklines.length, 2);
         assert.equal(element._sparklines[0].max, 6);
-        assert.equal(element._sparklines[0].min, 0);
+        assert.equal(element._sparklines[0].min, 1);
         assert.equal(element._sparklines[0].name, 'testName1');
         assert.equal(element._sparklines[0].points.length, 10);
         assert.equal(element._sparklines[0].points[0].y, 1);
@@ -376,11 +376,11 @@ limitations under the License.
 
           var lines = Polymer.dom(element.root).querySelectorAll('.sparkline-wrapper sparkline-chart');
           assert.equal(lines.length, 2);
-          assert.isUndefined(lines[0].xProperty);
-          assert.isUndefined(lines[0].yProperty);
+          assert.equal(lines[0].xProperty, 'x');
+          assert.equal(lines[0].yProperty, 'y');
           assert.deepEqual(lines[0].points, element._sparklines[0].points);
-          assert.isUndefined(lines[1].xProperty);
-          assert.isUndefined(lines[1].yProperty);
+          assert.equal(lines[1].xProperty, 'x');
+          assert.equal(lines[1].yProperty, 'y');
           assert.deepEqual(lines[1].points, element._sparklines[1].points);
           done();
         });
@@ -435,7 +435,7 @@ limitations under the License.
         assert.equal(element._sparklines[0].icon, 'testIcon1');
         assert.equal(element._sparklines[0].link, 'testLink1');
         assert.equal(element._sparklines[0].max, 6);
-        assert.equal(element._sparklines[0].min, 0);
+        assert.equal(element._sparklines[0].min, 1);
         assert.equal(element._sparklines[0].name, 'testName1');
         assert.equal(element._sparklines[0].styleClass, 'testStyleClass1');
         assert.equal(element._sparklines[0].points.length, 10);
@@ -527,22 +527,22 @@ limitations under the License.
           assert.equal(links[1].innerHTML, 'testName2');
           assert.equal(links[1].title, 'Open testName2');
 
-          var icons = Polymer.dom(element.root).querySelectorAll('.sparkline-wrapper iron-icon');
+          var icons = Polymer.dom(element.root).querySelectorAll('.sparkline-wrapper stylized-icon');
           assert.equal(icons.length, 2);
           assert.equal(icons[0].icon, 'testIcon1');
-          assert.isTrue(icons[0].classList.contains('testStyleClass1'));
+          assert.equal(icons[0].styleClass, 'testStyleClass1');
           assert.equal(icons[1].icon, 'testIcon2');
-          assert.isTrue(icons[1].classList.contains('testStyleClass2'));
+          assert.equal(icons[1].styleClass, 'testStyleClass2');
 
           var lines = Polymer.dom(element.root).querySelectorAll('.sparkline-wrapper sparkline-chart');
           assert.equal(lines.length, 2);
           assert.equal(lines[0].styleClass, 'testStyleClass1');
-          assert.isUndefined(lines[0].xProperty);
-          assert.isUndefined(lines[0].yProperty);
+          assert.equal(lines[0].xProperty, 'x');
+          assert.equal(lines[0].yProperty, 'y');
           assert.deepEqual(lines[0].points, element._sparklines[0].points);
           assert.equal(lines[1].styleClass, 'testStyleClass2');
-          assert.isUndefined(lines[1].xProperty);
-          assert.isUndefined(lines[1].yProperty);
+          assert.equal(lines[1].xProperty, 'x');
+          assert.equal(lines[1].yProperty, 'y');
           assert.deepEqual(lines[1].points, element._sparklines[1].points);
           done();
         });
@@ -552,47 +552,47 @@ limitations under the License.
         var sparklines = [{
           name: 'testName1',
           points: [{
-            count: 1,
-            date: new Date('01/01/2017')
+            y: 1,
+            x: new Date('01/01/2017')
           }, {
-            count: 2,
-            date: new Date('01/02/2017')
+            y: 2,
+            x: new Date('01/02/2017')
           }]
         }, {
           name: 'testName2',
           points: [{
-            count: 0,
-            date: new Date('01/03/2017')
+            y: 0,
+            x: new Date('01/03/2017')
           }, {
-            count: 3,
-            date: new Date('01/04/2017')
+            y: 3,
+            x: new Date('01/04/2017')
           }]
         }, {
           name: 'testName3',
           points: [{
-            count: 4,
-            date: new Date('01/05/2017')
+            y: 4,
+            x: new Date('01/05/2017')
           }, {
-            count: 0,
-            date: new Date('01/06/2017')
+            y: 0,
+            x: new Date('01/06/2017')
           }]
         }, {
           name: 'testName4',
           points: [{
-            count: 5,
-            date: new Date('01/07/2017')
+            y: 5,
+            x: new Date('01/07/2017')
           }, {
-            count: 0,
-            date: new Date('01/08/2017')
+            y: 0,
+            x: new Date('01/08/2017')
           }]
         }, {
           name: 'testName5',
           points: [{
-            count: 0,
-            date: new Date('01/10/2017')
+            y: 0,
+            x: new Date('01/10/2017')
           }, {
-            count: 6,
-            date: new Date('01/11/2017')
+            y: 6,
+            x: new Date('01/11/2017')
           }]
         }];
 
@@ -608,29 +608,29 @@ limitations under the License.
         assert.deepEqual(element._sparklinesToShow, [{
           name: 'testName1',
           points: [{
-            count: 1,
-            date: new Date('01/01/2017')
+            y: 1,
+            x: new Date('01/01/2017')
           }, {
-            count: 2,
-            date: new Date('01/02/2017')
+            y: 2,
+            x: new Date('01/02/2017')
           }]
         }, {
           name: 'testName2',
           points: [{
-            count: 0,
-            date: new Date('01/03/2017')
+            y: 0,
+            x: new Date('01/03/2017')
           }, {
-            count: 3,
-            date: new Date('01/04/2017')
+            y: 3,
+            x: new Date('01/04/2017')
           }]
         }, {
           name: 'testName3',
           points: [{
-            count: 4,
-            date: new Date('01/05/2017')
+            y: 4,
+            x: new Date('01/05/2017')
           }, {
-            count: 0,
-            date: new Date('01/06/2017')
+            y: 0,
+            x: new Date('01/06/2017')
           }]
         }]);
         assert.isTrue(element._showMore);
@@ -639,11 +639,11 @@ limitations under the License.
         assert.deepEqual(element._sparklinesToShow, [{
           name: 'testName1',
           points: [{
-            count: 1,
-            date: new Date('01/01/2017')
+            y: 1,
+            x: new Date('01/01/2017')
           }, {
-            count: 2,
-            date: new Date('01/02/2017')
+            y: 2,
+            x: new Date('01/02/2017')
           }]
         }]);
         assert.isTrue(element._showMore);
@@ -653,94 +653,94 @@ limitations under the License.
         element.set('_sparklines', [{
           name: 'testName1',
           points: [{
-            count: 1,
-            date: new Date('01/01/2017')
+            y: 1,
+            x: new Date('01/01/2017')
           }, {
-            count: 2,
-            date: new Date('01/02/2017')
+            y: 2,
+            x: new Date('01/02/2017')
           }]
         }, {
           name: 'testName2',
           points: [{
-            count: 0,
-            date: new Date('01/03/2017')
+            y: 0,
+            x: new Date('01/03/2017')
           }, {
-            count: 3,
-            date: new Date('01/04/2017')
+            y: 3,
+            x: new Date('01/04/2017')
           }]
         }, {
           name: 'testName3',
           points: [{
-            count: 4,
-            date: new Date('01/05/2017')
+            y: 4,
+            x: new Date('01/05/2017')
           }, {
-            count: 0,
-            date: new Date('01/06/2017')
+            y: 0,
+            x: new Date('01/06/2017')
           }]
         }, {
           name: 'testName4',
           points: [{
-            count: 5,
-            date: new Date('01/07/2017')
+            y: 5,
+            x: new Date('01/07/2017')
           }, {
-            count: 0,
-            date: new Date('01/08/2017')
+            y: 0,
+            x: new Date('01/08/2017')
           }]
         }, {
           name: 'testName5',
           points: [{
-            count: 0,
-            date: new Date('01/10/2017')
+            y: 0,
+            x: new Date('01/10/2017')
           }, {
-            count: 6,
-            date: new Date('01/11/2017')
+            y: 6,
+            x: new Date('01/11/2017')
           }]
         }]);
 
         assert.deepEqual(element._sparklinesToShow, [{
           name: 'testName1',
           points: [{
-            count: 1,
-            date: new Date('01/01/2017')
+            y: 1,
+            x: new Date('01/01/2017')
           }, {
-            count: 2,
-            date: new Date('01/02/2017')
+            y: 2,
+            x: new Date('01/02/2017')
           }]
         }, {
           name: 'testName2',
           points: [{
-            count: 0,
-            date: new Date('01/03/2017')
+            y: 0,
+            x: new Date('01/03/2017')
           }, {
-            count: 3,
-            date: new Date('01/04/2017')
+            y: 3,
+            x: new Date('01/04/2017')
           }]
         }, {
           name: 'testName3',
           points: [{
-            count: 4,
-            date: new Date('01/05/2017')
+            y: 4,
+            x: new Date('01/05/2017')
           }, {
-            count: 0,
-            date: new Date('01/06/2017')
+            y: 0,
+            x: new Date('01/06/2017')
           }]
         }, {
           name: 'testName4',
           points: [{
-            count: 5,
-            date: new Date('01/07/2017')
+            y: 5,
+            x: new Date('01/07/2017')
           }, {
-            count: 0,
-            date: new Date('01/08/2017')
+            y: 0,
+            x: new Date('01/08/2017')
           }]
         }, {
           name: 'testName5',
           points: [{
-            count: 0,
-            date: new Date('01/10/2017')
+            y: 0,
+            x: new Date('01/10/2017')
           }, {
-            count: 6,
-            date: new Date('01/11/2017')
+            y: 6,
+            x: new Date('01/11/2017')
           }]
         }]);
         assert.isFalse(element._showMore);
@@ -749,20 +749,20 @@ limitations under the License.
         assert.deepEqual(element._sparklinesToShow, [{
           name: 'testName1',
           points: [{
-            count: 1,
-            date: new Date('01/01/2017')
+            y: 1,
+            x: new Date('01/01/2017')
           }, {
-            count: 2,
-            date: new Date('01/02/2017')
+            y: 2,
+            x: new Date('01/02/2017')
           }]
         }, {
           name: 'testName2',
           points: [{
-            count: 0,
-            date: new Date('01/03/2017')
+            y: 0,
+            x: new Date('01/03/2017')
           }, {
-            count: 3,
-            date: new Date('01/04/2017')
+            y: 3,
+            x: new Date('01/04/2017')
           }]
         }]);
         assert.isTrue(element._showMore);
@@ -777,47 +777,47 @@ limitations under the License.
         element.set('_sparklines', [{
           name: 'testName1',
           points: [{
-            count: 1,
-            date: new Date('01/01/2017')
+            y: 1,
+            x: new Date('01/01/2017')
           }, {
-            count: 2,
-            date: new Date('01/02/2017')
+            y: 2,
+            x: new Date('01/02/2017')
           }]
         }, {
           name: 'testName2',
           points: [{
-            count: 0,
-            date: new Date('01/03/2017')
+            y: 0,
+            x: new Date('01/03/2017')
           }, {
-            count: 3,
-            date: new Date('01/04/2017')
+            y: 3,
+            x: new Date('01/04/2017')
           }]
         }, {
           name: 'testName3',
           points: [{
-            count: 4,
-            date: new Date('01/05/2017')
+            y: 4,
+            x: new Date('01/05/2017')
           }, {
-            count: 0,
-            date: new Date('01/06/2017')
+            y: 0,
+            x: new Date('01/06/2017')
           }]
         }, {
           name: 'testName4',
           points: [{
-            count: 5,
-            date: new Date('01/07/2017')
+            y: 5,
+            x: new Date('01/07/2017')
           }, {
-            count: 0,
-            date: new Date('01/08/2017')
+            y: 0,
+            x: new Date('01/08/2017')
           }]
         }, {
           name: 'testName5',
           points: [{
-            count: 0,
-            date: new Date('01/10/2017')
+            y: 0,
+            x: new Date('01/10/2017')
           }, {
-            count: 6,
-            date: new Date('01/11/2017')
+            y: 6,
+            x: new Date('01/11/2017')
           }]
         }]);
 
@@ -825,38 +825,38 @@ limitations under the License.
         assert.deepEqual(element._sparklinesToShow, [{
           name: 'testName1',
           points: [{
-            count: 1,
-            date: new Date('01/01/2017')
+            y: 1,
+            x: new Date('01/01/2017')
           }, {
-            count: 2,
-            date: new Date('01/02/2017')
+            y: 2,
+            x: new Date('01/02/2017')
           }]
         }, {
           name: 'testName2',
           points: [{
-            count: 0,
-            date: new Date('01/03/2017')
+            y: 0,
+            x: new Date('01/03/2017')
           }, {
-            count: 3,
-            date: new Date('01/04/2017')
+            y: 3,
+            x: new Date('01/04/2017')
           }]
         }, {
           name: 'testName3',
           points: [{
-            count: 4,
-            date: new Date('01/05/2017')
+            y: 4,
+            x: new Date('01/05/2017')
           }, {
-            count: 0,
-            date: new Date('01/06/2017')
+            y: 0,
+            x: new Date('01/06/2017')
           }]
         }, {
           name: 'testName4',
           points: [{
-            count: 5,
-            date: new Date('01/07/2017')
+            y: 5,
+            x: new Date('01/07/2017')
           }, {
-            count: 0,
-            date: new Date('01/08/2017')
+            y: 0,
+            x: new Date('01/08/2017')
           }]
         }]);
         assert.isTrue(element._showMore);
@@ -865,47 +865,47 @@ limitations under the License.
         assert.deepEqual(element._sparklinesToShow, [{
           name: 'testName1',
           points: [{
-            count: 1,
-            date: new Date('01/01/2017')
+            y: 1,
+            x: new Date('01/01/2017')
           }, {
-            count: 2,
-            date: new Date('01/02/2017')
+            y: 2,
+            x: new Date('01/02/2017')
           }]
         }, {
           name: 'testName2',
           points: [{
-            count: 0,
-            date: new Date('01/03/2017')
+            y: 0,
+            x: new Date('01/03/2017')
           }, {
-            count: 3,
-            date: new Date('01/04/2017')
+            y: 3,
+            x: new Date('01/04/2017')
           }]
         }, {
           name: 'testName3',
           points: [{
-            count: 4,
-            date: new Date('01/05/2017')
+            y: 4,
+            x: new Date('01/05/2017')
           }, {
-            count: 0,
-            date: new Date('01/06/2017')
+            y: 0,
+            x: new Date('01/06/2017')
           }]
         }, {
           name: 'testName4',
           points: [{
-            count: 5,
-            date: new Date('01/07/2017')
+            y: 5,
+            x: new Date('01/07/2017')
           }, {
-            count: 0,
-            date: new Date('01/08/2017')
+            y: 0,
+            x: new Date('01/08/2017')
           }]
         }, {
           name: 'testName5',
           points: [{
-            count: 0,
-            date: new Date('01/10/2017')
+            y: 0,
+            x: new Date('01/10/2017')
           }, {
-            count: 6,
-            date: new Date('01/11/2017')
+            y: 6,
+            x: new Date('01/11/2017')
           }]
         }]);
         assert.isFalse(element._showMore);
