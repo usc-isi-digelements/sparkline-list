@@ -1,7 +1,7 @@
 {
   "name": "sparkline-list",
   "description": "A Polymer Element showing a list of sparkline charts.",
-  "version": "2.4.2",
+  "version": "2.4.3",
   "authors": [
     "Next Century Corporation"
   ],

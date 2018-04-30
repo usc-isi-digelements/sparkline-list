@@ -932,6 +932,19 @@ limitations under the License.
           done();
         });
       });
+
+      test('_numberToString does return expected string', function() {
+        expect(element._numberToString(0)).to.equal('0');
+        expect(element._numberToString(1)).to.equal('1');
+        expect(element._numberToString(100)).to.equal('100');
+        expect(element._numberToString(999)).to.equal('999');
+
+        expect(element._numberToString(1000)).to.equal('1,000');
+        expect(element._numberToString(123456789)).to.equal('123,456,789');
+
+        expect(element._numberToString(1.987654)).to.equal('1.987654');
+        expect(element._numberToString(123456789.987654)).to.equal('123,456,789.987654');
+      });
     });
   </script>
 </body>

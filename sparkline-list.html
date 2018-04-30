@@ -619,6 +619,20 @@ Custom property               | Description                            | Default
       },
 
       /**
+       * Formats the given number with commas and returns it as a string.
+       *
+       * @param {Number} number
+       * @return {String}
+       * @private
+       */
+      _numberToString: function(number) {
+        var string = number.toString();
+        var prefix = string.indexOf('.') >= 0 ? string.substring(0, string.indexOf('.')) : string;
+        var suffix = string.indexOf('.') >= 0 ? string.substring(string.indexOf('.')) : '';
+        return prefix.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + suffix;
+      },
+
+      /**
        * Pads the given sparkline data so that each point has zero-count values to its left and right if needed.
        *
        * @param {Array} data
@@ -673,8 +687,8 @@ Custom property               | Description                            | Default
           var paddedSparkline = {
             icon: item.icon,
             link: item.link,
-            max: ('' + max).replace(/\B(?=(\d{3})+(?!\d))/g, ','),
-            min: ('' + min).replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+            max: self._numberToString(max),
+            min: self._numberToString(min),
             name: item.name,
             styleClass: item.styleClass,
             points: points
