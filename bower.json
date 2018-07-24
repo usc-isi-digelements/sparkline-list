@@ -1,27 +1,18 @@
 {
   "name": "sparkline-list",
   "description": "A Polymer Element showing a list of sparkline charts.",
-  "version": "2.4.3",
-  "authors": [
-    "Next Century Corporation"
-  ],
+  "version": "2.4.4",
+  "authors": ["Next Century Corporation"],
   "license": "Apache-2.0",
-  "keywords": [
-    "web-component",
-    "polymer",
-    "d3"
-  ],
+  "keywords": ["web-component", "polymer", "d3"],
   "main": "sparkline-list.html",
   "homepage": "https://github.com/usc-isi-digelements/sparkline-list/",
-  "ignore": [
-    "/.*",
-    "/test/"
-  ],
+  "ignore": ["/.*", "/test/"],
   "dependencies": {
     "polymer": "Polymer/polymer#^2.0.2",
     "iron-flex-layout": "PolymerElements/iron-flex-layout#^2.0.0",
-    "sparkline-chart" : "usc-isi-digelements/sparkline-chart#2.2.2",
-    "stylized-icon": "usc-isi-digelements/stylized-icon#2.0.0"
+    "sparkline-chart": "usc-isi-digelements/sparkline-chart#^2.2.2",
+    "stylized-icon": "usc-isi-digelements/stylized-icon#^2.0.1"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^2.0.0",
